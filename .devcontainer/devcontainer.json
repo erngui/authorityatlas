@@ -11,7 +11,16 @@
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance"
-      ]
+      ],
+      "settings": {
+        "workbench.startupEditor": "none",
+        "workbench.colorTheme": "Default Dark+",
+        "workbench.iconTheme": "vs-seti",
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.languageServer": "Pylance",
+        "python.dataScience.jupyterServerType": "local",
+        "python.showStartPage": false
+      }
     }
   },
   "postCreateCommand": "pip install -r requirements.txt",
