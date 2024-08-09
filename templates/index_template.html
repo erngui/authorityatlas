@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authority Atlas</title>
+</head>
+<body>
+    <h1>Authority Atlas</h1>
+    <ul>
+        {% for article in articles %}
+        <li>
+            <a href="{{ article.filename }}">{{ article.name }}</a> ({{ article.acronym }}) - Established: {{ article.year_established }} - Last Updated: {{ article.date }}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
