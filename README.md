@@ -15,6 +15,7 @@ To add a new authority to the Atlas:
 
 1. Create a YAML file in the data/articles directory for the new authority. Use the following template:
 
+```
    authorities:
   - name: "Best Safety Authority"
     acronym: "BSA"
@@ -32,6 +33,8 @@ To add a new authority to the Atlas:
     date: "2024-08-07"
     factoid: "An interesting or fun fact about the authority."
     tags: ["tag1", "tag2", "tag3"]
+
+```
 
 2. Submit a Pull Request:
 
@@ -56,16 +59,16 @@ To get started developing for Authority Atlas, you can clone this repository and
 
 2. **Set Up a Virtual Environment (Optional but Recommended):**
 
-   python3 -m venv venv
-   source venv/bin/activate
+   `python3 -m venv venv
+   `source venv/bin/activate
 
 3. **Install Dependencies:**
 
-   pip install -r requirements.txt
+   `pip install -r requirements.txt
 
 4. **Run the Local Server:**
 
-   python3 -m http.server 8000
+   `python3 -m http.server 8000
 
    Open http://localhost:8000 in your web browser to view the site locally.
 
