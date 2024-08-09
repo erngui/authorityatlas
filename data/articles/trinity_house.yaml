@@ -1,0 +1,17 @@
+authorities:
+  - name: "Trinity House"
+    acronym: "TH"
+    remit: "General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar. Provides aids to navigation for the safe passage of mariners."
+    type: "Royal Charter corporation and registered charity"
+    legal_basis:
+      name: "Royal Charter"
+      link: "https://www.trinityhouse.co.uk/about-us/what-we-do/charter-and-bye-laws"
+    establishment_country: "United Kingdom"
+    regional_remit: "UK, Channel Islands, Gibraltar"
+    website: "https://www.trinityhouse.co.uk"
+    wikipedia: "https://en.wikipedia.org/wiki/Trinity_House"
+    year_established: 1514
+    legal_representative: "Master"
+    date: "2024-08-04"
+    factoid: "Trinity House was established by Henry VIII in 1514 and is one of the oldest organizations of its kind in the world."
+    tags: ["UK", "Lighthouses", "Navigation", "Maritime Safety", "Royal Charter", "Charity", "Public Service"]
