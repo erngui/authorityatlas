@@ -18,6 +18,7 @@
         "workbench.iconTheme": "vs-seti",
         "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.languageServer": "Pylance",
+        "python.installJupyterlab": "true",
         "python.dataScience.jupyterServerType": "local",
         "python.showStartPage": false
       }
