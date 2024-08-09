@@ -101,6 +101,6 @@ For more details, see the full [CC BY-SA 4.0 License](LICENSE-CC-BY-SA.md).
 
 For more information or to get in touch:
 
-Email: public@erngui.com
-Twitter: @erngui
-Website: https://erngui.com
+- Email: public@erngui.com
+- Twitter: [@erngui](https://x.com/erngui)
+- Website: https://erngui.com
