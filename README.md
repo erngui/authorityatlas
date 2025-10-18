@@ -1,106 +1,107 @@
 # Authority Atlas
-Authority Atlas is an open-source project that aims to create a comprehensive and accessible global database of authorities and similar organizations working for the common good.
+
+**Authority Atlas** is an open-source project that aims to create a comprehensive and accessible global database of authorities and similar organizations working for the common good.
 
 ## 🌐 Visit Authority Atlas
 
-You can explore the live site at: [authorityatlas.org](https://authorityatlas.org)
+Explore the live site at: https://authorityatlas.org
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! If you'd like to contribute, here's how you can get involved:
+We welcome contributions from the community!
 
-### Submitting a New Authority
+### 🏛️ Submitting a New Authority
 
 To add a new authority to the Atlas:
 
-1. Create a YAML file in the data/articles directory for the new authority. Use the following template:
+1. Create a YAML file under the `data/articles/` directory, following this format:
 
 ```
-   authorities:
+authorities:
   - name: "Best Safety Authority"
     acronym: "BSA"
     remit: "Brief description of the authority's remit."
     type: "Type of organization (e.g., government department, NGO, etc.)"
-    legal_basis:
-      name: "Name of the legal basis"
-      link: "URL to the legal basis"
+    legal_basis_name: "Name of the legal basis"
+    legal_basis_link: "https://example.org/legal-basis"
     establishment_country: "Country of establishment"
     regional_remit: "Geographical scope of the authority"
     website: "https://www.newauthority.org"
     wikipedia: "https://en.wikipedia.org/wiki/New_Authority"
     year_established: 2000
     legal_representative: "Title of the main representative"
-    date: "2024-08-07"
     factoid: "An interesting or fun fact about the authority."
+    description: "A slightly longer summary that can appear in search results."
     tags: ["tag1", "tag2", "tag3"]
+    fact_checking_websites: ["https://example.org/factcheck"]
 
 ```
 
-2. Submit a Pull Request:
-
-Commit your changes and submit a pull request. Be sure to include a meaningful commit message that describes the addition.
+2. Commit your changes and submit a **Pull Request** with a clear, descriptive message.
 
 ## 🚀 Getting Started with Development
 
-To get started developing for Authority Atlas, you can clone this repository and set up your development environment using GitHub Codespaces or locally on your machine.
+You can develop locally or use GitHub Codespaces.
 
 ### Prerequisites
 
 - Python 3.x
 - Git
 
-### Installation
+### Local Setup
 
-1. **Clone the Repository:**
+1. **Clone the repository:**
 
-   ```bash
-   git clone https://github.com/your-username/authorityatlas.git
-   cd authorityatlas
+    git clone https://github.com/erngui/authorityatlas.git
+    cd authorityatlas
 
-2. **Set Up a Virtual Environment (Optional but Recommended):**
+2. **(Optional) Create a virtual environment:**
 
-   `python3 -m venv venv
-   `source venv/bin/activate
+    python3 -m venv venv
+    source venv/bin/activate
 
-3. **Install Dependencies:**
+3. **Install dependencies:**
 
-   `pip install -r requirements.txt
+    pip install -r requirements.txt
 
-4. **Run the Local Server:**
+4. **Generate the site:**
 
-   `python3 -m http.server 8000
+    python aagenerate.py
 
-   Open http://localhost:8000 in your web browser to view the site locally.
+5. **Preview locally (optional):**
 
+    cd output
+    python3 -m http.server 8000
 
-### Reporting Issues
-If you encounter any issues with the site or have suggestions for improvements, please open an issue.
+    Visit http://localhost:8000 in your browser.
+
+## 🐞 Reporting Issues
+
+Please open an issue if you encounter bugs or have ideas for improvements.
 
 ## 📄 License
-The code in this repository is licensed under the MIT License. See the LICENSE file for details.
 
-## Data License
+- **Code**: Licensed under the MIT License
+- **Content** (`data/` directory): Licensed under the CC BY-SA 4.0
 
-The YAML files and other content within the `data` directory are licensed under the Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license. You are free to:
+### ✍️ Summary of CC BY-SA 4.0
 
-- **Share** — copy and redistribute the material in any medium or format
-- **Adapt** — remix, transform, and build upon the material for any purpose, even commercially.
+You are free to:
 
-Under the following terms:
+- **Share** — copy and redistribute the material in any medium or format  
+- **Adapt** — remix, transform, and build upon the material for any purpose, even commercially  
 
-- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
-- **ShareAlike** — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+Under these terms:
 
-For more details, see the full [CC BY-SA 4.0 License](LICENSE-CC-BY-SA.md).
+- **Attribution** — You must give appropriate credit.  
+- **ShareAlike** — You must license your contributions under the same terms.
 
 ## 🙌 Acknowledgments
-* Wikimedia Commons for providing freely usable media files.
-* The open-source community for their contributions and support.
 
-## 📫 Contact
+- Wikimedia Commons for freely usable media
+- The open-source community
 
-For more information or to get in touch:
+## 🔗 Official Sites
 
-- Email: public@erngui.com
-- Twitter: [@erngui](https://x.com/erngui)
-- Website: https://erngui.com
+- 🌐 https://authorityatlas.org
+- 🛠️ Developed by https://ernestoexplains.com
