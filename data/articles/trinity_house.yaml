@@ -1,17 +1,61 @@
+# This YAML file describes an authority for inclusion in Authority Atlas.
+
 authorities:
-  - name: "Trinity House"
-    acronym: "TH"
-    remit: "General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar. Provides aids to navigation for the safe passage of mariners."
+  - name: "Trinity House"  # The full official name of the authority.
+    acronym: "TH"  # A commonly recognized abbreviation or acronym for the authority.
+    
+    # A brief description of what the authority does. This should summarize the primary functions,
+    # responsibilities, or services provided by the authority.
+    remit: "General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar."
+    
+    # The type of organization. This could be a government department, EU agency, private organization,
+    # NGO, standards body, or another type of entity. Be specific about the nature of the organization.
     type: "Royal Charter corporation and registered charity"
-    legal_basis:
-      name: "Royal Charter"
-      link: "https://www.trinityhouse.co.uk/about-us/what-we-do/charter-and-bye-laws"
+    
+    # Legal basis for the authority's establishment. This should include the name of the legal instrument 
+    # (e.g., Royal Charter, EU Regulation, National Law) and a link to where the legal text can be found.
+    legal_basis_name: "Royal Charter"  # The name of the legal instrument that established or defines the authority.
+    legal_basis_link: "https://www.trinityhouse.co.uk/about-us/what-we-do/charter-and-bye-laws"  # A URL to the legal text or a summary.
+    
+    # The country where the authority was established or where its headquarters are located.
     establishment_country: "United Kingdom"
-    regional_remit: "UK, Channel Islands, Gibraltar"
+    
+    # The geographical scope of the authority's remit. This could be a specific country, region (e.g., EU),
+    # or indicate a worldwide/international scope.
+    regional_remit: "England, Wales, Channel Islands, Gibraltar"
+    
+    # The official website of the authority. This should be a URL to the authority's main website.
     website: "https://www.trinityhouse.co.uk"
+    
+    # A link to the relevant Wikipedia page about the authority, if available.
     wikipedia: "https://en.wikipedia.org/wiki/Trinity_House"
     year_established: 1514
     legal_representative: "Master"
-    date: "2024-08-04"
+
+
+    # A general description of the authority. This field allows for a more detailed narrative about the
+    # authority's history, role, and significance.
+    description: "Trinity House is responsible for providing aids to navigation and is one of the oldest organizations of its kind in the world."
+    
+    # A unique or interesting fact about the authority. This could be something historical, a little-known fact,
+    # or an aspect of the authority that is particularly noteworthy.
     factoid: "Trinity House was established by Henry VIII in 1514 and is one of the oldest organizations of its kind in the world."
-    tags: ["UK", "Lighthouses", "Navigation", "Maritime Safety", "Royal Charter", "Charity", "Public Service"]
+    
+    # A list of relevant keywords or tags associated with the authority. These help categorize the authority
+    # and make it easier to search and find.
+    tags: ["England", "Wales", "Channel Islands", "Gibraltar", "Lighthouses", "Navigation", "Maritime Safety", "Royal Charter", "Charity", "Public Service"]
+    
+    # A relative path to an image associated with the authority, typically a logo or emblem. The image should be
+    # placed in the `templates/images` directory.
+    image: "images/trinity_house_logo.png"
+    
+    # A list of websites that can be used to fact-check the information provided about the authority. Each entry
+    # should include the name of the website, a brief description, and a link to the site.
+    fact_checking_websites:
+      - name: "Grace's Guide to British Industrial History"  # The name of the fact-checking or reference website.
+        description: "An online resource for historical information on British industry."  # A brief description of what the website offers.
+        link: "https://www.gracesguide.co.uk/Trinity_House"  # A URL to the fact-checking website.
+      - name: "UK Government Official Website"
+        description: "The official government website providing authoritative information on UK institutions."
+        link: "https://www.gov.uk/government/organisations/trinity-house"
+

@@ -1,18 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Authority Atlas</title>
+  <meta charset="UTF-8">
+  <title>Authority Atlas</title>
+  <style>
+    body { font-family: sans-serif; max-width: 1000px; margin: auto; padding: 2rem; }
+    input[type="text"] { width: 100%; padding: 0.5rem; font-size: 1rem; margin-bottom: 2rem; }
+    .entry { margin-bottom: 1.5rem; }
+    .entry h2 { margin-bottom: 0.2rem; }
+    .entry a { text-decoration: none; color: #0645AD; }
+    .entry a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-    <h1>Authority Atlas</h1>
-    <ul>
-        {% for article in articles %}
-        <li>
-            <a href="{{ article.filename }}">{{ article.name }}</a> ({{ article.acronym }}) - Established: {{ article.year_established }} - Last Updated: {{ article.date }}
-        </li>
-        {% endfor %}
-    </ul>
+  <h1>Authority Atlas</h1>
+  <input type="text" id="searchInput" placeholder="Search authorities...">
+  <div id="results"></div>
+
+  <script>
+    const metadata = {{ articles | tojson }};
+    const resultsContainer = document.getElementById('results');
+    const input = document.getElementById('searchInput');
+
+    function renderResults(filtered) {
+      resultsContainer.innerHTML = '';
+      filtered.forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        div.innerHTML = `
+          <h2><a href="${entry.filename}">${entry.name}</a></h2>
+          <p>${entry.description || ''}</p>
+        `;
+        resultsContainer.appendChild(div);
+      });
+    }
+
+    input.addEventListener('input', () => {
+      const query = input.value.toLowerCase();
+      const filtered = metadata.filter(entry =>
+        Object.values(entry).join(' ').toLowerCase().includes(query)
+      );
+      renderResults(filtered);
+    });
+
+    renderResults(metadata);
+  </script>
 </body>
 </html>
+
 

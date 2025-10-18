@@ -1,70 +1,107 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ name }}</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px 12px; text-align: left; }
-        th { font-weight: bold; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-    </style>
+  <meta charset="UTF-8">
+  <title>{{ authority.name }}</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      line-height: 1.5;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    td {
+      padding: 0.5rem;
+      vertical-align: top;
+    }
+    td.label {
+      font-weight: bold;
+      width: 30%;
+      text-transform: capitalize;
+    }
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+    }
+    a {
+      color: #0645AD;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+  </style>
 </head>
 <body>
-    <h1>{{ name }} ({{ acronym }})</h1>
-    <table>
+  <h1>{{ authority.name }}</h1>
+
+  <table>
+    {% for key, value in authority.items() %}
+      {% if key == 'name' %}
+        {# Already shown as the page title #}
+      {% elif key == 'legal_basis_link' %}
+        {# Skip – will be handled together with legal_basis_name #}
+      {% elif key == 'legal_basis_name' %}
         <tr>
-            <th>Type</th>
-            <td>{{ type }}</td>
+          <td class="label">Legal Basis</td>
+          <td>
+            {% if authority.legal_basis_link %}
+              <a href="{{ authority.legal_basis_link }}" target="_blank">{{ value }}</a>
+            {% else %}
+              {{ value }}
+            {% endif %}
+          </td>
         </tr>
+      {% elif value is string %}
         <tr>
-            <th>Legal Basis</th>
-            <td><a href="{{ legal_basis.link }}">{{ legal_basis.name }}</a></td>
+          <td class="label">{{ key.replace('_', ' ').title() }}</td>
+          <td>
+            {% if value.startswith('http') %}
+              <a href="{{ value }}" target="_blank">{{ value }}</a>
+            {% else %}
+              {{ value }}
+            {% endif %}
+          </td>
         </tr>
+      {% elif value is iterable and value is not string %}
         <tr>
-            <th>Establishment Country</th>
-            <td>{{ establishment_country }}</td>
+          <td class="label">{{ key.replace('_', ' ').title() }}</td>
+          <td>
+            <ul>
+              {% for item in value %}
+                {% if item is mapping and 'link' in item and 'name' in item %}
+                  <li><a href="{{ item.link }}" target="_blank">{{ item.name }}</a></li>
+                {% else %}
+                  <li>{{ item }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </td>
         </tr>
-        <tr>
-            <th>Regional Remit</th>
-            <td>{{ regional_remit }}</td>
-        </tr>
-        <tr>
-            <th>Year Established</th>
-            <td>{{ year_established }}</td>
-        </tr>
-        <tr>
-            <th>Legal Representative</th>
-            <td>{{ legal_representative }}</td>
-        </tr>
-        <tr>
-            <th>Date</th>
-            <td>{{ date }}</td>
-        </tr>
-        <tr>
-            <th>Tags</th>
-            <td>{{ tags | join(', ') }}</td>
-        </tr>
-        <tr>
-            <th>Website</th>
-            <td><a href="{{ website }}">{{ website }}</a></td>
-        </tr>
-        <tr>
-            <th>Wikipedia</th>
-            <td><a href="{{ wikipedia }}">{{ wikipedia }}</a></td>
-        </tr>
-        <tr>
-            <th>Remit</th>
-            <td>{{ remit }}</td>
-        </tr>
-        <tr>
-            <th>Factoid</th>
-            <td>{{ factoid }}</td>
-        </tr>
-    </table>
+      {% endif %}
+    {% endfor %}
+  </table>
+
+  <footer style="margin-top:2rem; font-size:0.9rem; color:#555;">
+    <hr>
+    <p>
+      Part of the <strong>Authority Atlas</strong> open project.<br>
+      <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a>
+    </p>
+  </footer>
 </body>
 </html>
-
 

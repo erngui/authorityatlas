@@ -3,75 +3,89 @@ import yaml
 import json
 from jinja2 import Template
 
-# Directory paths
-data_dir = 'data/articles'
-template_dir = 'templates'
-output_dir = 'output'
-metadata_file = os.path.join(output_dir, 'metadata.json')
-index_file = os.path.join(output_dir, 'index.html')
-search_file = os.path.join(output_dir, 'search.html')
+# Configuration
+INPUT_DIR = "data/articles"
+OUTPUT_DIR = "output"
+TEMPLATES_DIR = "templates"
 
-# Load the templates
-with open(os.path.join(template_dir, 'article_template.html'), 'r') as file:
-    article_template = Template(file.read())
+# Templates
+INDEX_TEMPLATE_FILE = os.path.join(TEMPLATES_DIR, "index_template.html")
+ARTICLE_TEMPLATE_FILE = os.path.join(TEMPLATES_DIR, "article_template.html")
 
-with open(os.path.join(template_dir, 'index_template.html'), 'r') as file:
-    index_template = Template(file.read())
+# Ensure output directory exists
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-with open(os.path.join(template_dir, 'search_template.html'), 'r') as file:
-    search_template = Template(file.read())
+# Load templates
+with open(INDEX_TEMPLATE_FILE, "r", encoding="utf-8") as f:
+    index_template = Template(f.read())
 
+with open(ARTICLE_TEMPLATE_FILE, "r", encoding="utf-8") as f:
+    article_template = Template(f.read())
+
+def validate_authority(authority, filename):
+    required_fields = [
+        'name', 'acronym', 'remit', 'type',
+        'legal_basis_name', 'legal_basis_link',
+        'establishment_country', 'regional_remit',
+        'year_established', 'legal_representative',
+        'tags', 'factoid', 'description', 'fact_checking_websites'
+    ]
+    for field in required_fields:
+        if field not in authority:
+            raise ValueError(f"❌ Missing field '{field}' in file: {filename}")
+        if authority[field] in [None, '']:
+            raise ValueError(f"⚠️ Empty field '{field}' in file: {filename}")
+
+    if not isinstance(authority['tags'], list):
+        raise TypeError(f"❌ 'tags' should be a list in file: {filename}")
+    if not isinstance(authority['fact_checking_websites'], list):
+        raise TypeError(f"❌ 'fact_checking_websites' should be a list in file: {filename}")
+
+# Collect data
+articles = []
 metadata_list = []
 
-# Process each YAML file
-for filename in os.listdir(data_dir):
-    if filename.endswith('.yaml'):
-        with open(os.path.join(data_dir, filename), 'r') as file:
-            data = yaml.safe_load(file)
+for filename in os.listdir(INPUT_DIR):
+    if filename.endswith(".yaml") or filename.endswith(".yml"):
+        with open(os.path.join(INPUT_DIR, filename), "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
 
-            # Check if the file contains a list of authorities or a single authority
-            if 'authorities' in data:
-                authorities = data['authorities']
-            else:
-                authorities = [data]
+        # Expect the file to have an 'authorities' list
+        if not isinstance(data.get('authorities'), list):
+            raise ValueError(f"❌ Expected 'authorities' to be a list in {filename}, but got {type(data.get('authorities')).__name__}")
 
-            for authority in authorities:
-                output_html = article_template.render(authority)
+        for authority in data['authorities']:
+            validate_authority(authority, filename)
 
-                # Generate a unique filename based on the authority name
-                safe_name = authority['name'].replace(" ", "_").lower()
-                output_filename = os.path.join(output_dir, f"{safe_name}.html")
-                with open(output_filename, 'w') as output_file:
-                    output_file.write(output_html)
+            # Safe file name
+            safe_name = authority['name'].replace(" ", "_").lower()
+            article_filename = f"{safe_name}.html"
 
-                # Collect metadata
-                metadata_list.append({
-                    'name': authority['name'],
-                    'acronym': authority['acronym'],
-                    'type': authority['type'],
-                    'legal_basis': authority['legal_basis']['name'],
-                    'legal_basis_link': authority['legal_basis']['link'],
-                    'establishment_country': authority['establishment_country'],
-                    'regional_remit': authority['regional_remit'],
-                    'year_established': authority['year_established'],
-                    'legal_representative': authority['legal_representative'],
-                    'date': authority['date'],
-                    'tags': authority['tags'],
-                    'filename': f"{safe_name}.html"
-                })
+            # Render article page
+            article_output = article_template.render(authority=authority)
+            with open(os.path.join(OUTPUT_DIR, article_filename), "w", encoding="utf-8") as outf:
+                outf.write(article_output)
 
-# Write metadata to JSON file
-with open(metadata_file, 'w') as file:
-    json.dump(metadata_list, file, indent=2)
+            # Add entry to index
+            articles.append({
+                'name': authority['name'],
+                'description': authority.get('description', ''),
+                'filename': article_filename
+            })
 
-# Create the index.html file
-index_html = index_template.render(articles=metadata_list)
-with open(index_file, 'w') as file:
-    file.write(index_html)
+            # Metadata blob for client-side search
+            metadata_list.append({
+                'search_blob': json.dumps(authority, ensure_ascii=False),
+                'filename': article_filename
+            })
 
-# Create the search.html file
-search_html = search_template.render()
-with open(search_file, 'w') as file:
-    file.write(search_html)
+# Render index page
+index_output = index_template.render(
+    articles=articles,
+    metadata=json.dumps(metadata_list, ensure_ascii=False)
+)
 
-print("HTML files, index.html, search.html, and metadata generated successfully.")
+with open(os.path.join(OUTPUT_DIR, "index.html"), "w", encoding="utf-8") as f:
+    f.write(index_output)
+
+print("✅ Site generation complete.")

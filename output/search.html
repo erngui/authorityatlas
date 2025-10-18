@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Authorities</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #results { margin-top: 20px; }
+        .result { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Search Authorities</h1>
+    <input type="text" id="searchInput" placeholder="Search by name, acronym, type, etc." onkeyup="performSearch()">
+    <div id="results"></div>
+
+    <script>
+        let metadata = {};
+
+        // Load metadata
+        fetch('metadata.json')
+            .then(response => response.json())
+            .then(data => { metadata = data; })
+            .catch(error => console.error('Error loading metadata:', error));
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            const results = metadata.filter(article => {
+                return article.name.toLowerCase().includes(query) ||
+                       article.acronym.toLowerCase().includes(query) ||
+                       article.type.toLowerCase().includes(query) ||
+                       article.legal_basis.toLowerCase().includes(query) ||
+                       article.establishment_country.toLowerCase().includes(query) ||
+                       article.regional_remit.toLowerCase().includes(query) ||
+                       article.year_established.toString().includes(query) ||
+                       article.legal_representative.toLowerCase().includes(query) ||
+                       article.date.toLowerCase().includes(query) ||
+                       article.tags.some(tag => tag.toLowerCase().includes(query));
+            });
+
+            results.forEach(article => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result';
+                resultDiv.innerHTML = `<a href="${article.filename}">${article.name}</a> (${article.acronym}) - Established: ${article.year_established} - Last Updated: ${article.date}`;
+                resultsDiv.appendChild(resultDiv);
+            });
+        }
+    </script>
+</body>
+</html>
