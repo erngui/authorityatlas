@@ -5,7 +5,7 @@ from jinja2 import Template
 
 # Configuration
 INPUT_DIR = "data/articles"
-OUTPUT_DIR = "output"
+OUTPUT_DIR = "docs"
 TEMPLATES_DIR = "templates"
 
 # Templates
