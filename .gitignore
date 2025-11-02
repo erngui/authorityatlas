@@ -1,18 +1,22 @@
-# Python virtual environment
+# Python virtual environments
+.venv/
 venv/
 source/
 
-# Python cache
+# Python cache and compiled files
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+
+# Environment and local config files
+.env
+*.log
+
+# IDE and editor settings
+.vscode/
+.idea/
 
 # OS metadata
 .DS_Store
-
-# VS Code settings (optional, useful for consistency)
-.vscode/
-
-
-# Local development config
-.env
-*.log
+Thumbs.db

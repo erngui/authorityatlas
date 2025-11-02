@@ -1,107 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>{{ authority.name }}</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 800px;
-      margin: auto;
-      padding: 2rem;
-      line-height: 1.5;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    td {
-      padding: 0.5rem;
-      vertical-align: top;
-    }
-    td.label {
-      font-weight: bold;
-      width: 30%;
-      text-transform: capitalize;
-    }
-    h1 {
-      margin-bottom: 0.5rem;
-    }
-    h2 {
-      margin-top: 2rem;
-      font-size: 1.2rem;
-    }
-    a {
-      color: #0645AD;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    ul {
-      margin: 0;
-      padding-left: 1.2rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ authority.name }} - Authority Atlas</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        header {
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .acronym {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 10px 20px;
+            margin-bottom: 20px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+        .info-value {
+            color: #2c3e50;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .tag {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .tag:hover {
+            background-color: #2980b9;
+            cursor: pointer;
+        }
+        .factoid-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .resources {
+            list-style: none;
+            padding: 0;
+        }
+        .resources li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .resources li:last-child {
+            border-bottom: none;
+        }
+        .resource-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .resource-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        {% if authority.image %}
+        .logo {
+            max-width: 200px;
+            max-height: 100px;
+            float: right;
+            margin-left: 20px;
+        }
+        {% endif %}
+    </style>
 </head>
 <body>
-  <h1>{{ authority.name }}</h1>
+    <a href="index.html" class="back-link">← Back to Atlas</a>
+    
+    <header>
+        {% if authority.image is defined %}
+        <img src="{{ authority.image }}" alt="{{ authority.name }} logo" class="logo">
+        {% endif %}
+        <h1>{{ authority.name }}</h1>
+        <p class="acronym">{{ authority.acronym }}</p>
+    </header>
 
-  <table>
-    {% for key, value in authority.items() %}
-      {% if key == 'name' %}
-        {# Already shown as the page title #}
-      {% elif key == 'legal_basis_link' %}
-        {# Skip – will be handled together with legal_basis_name #}
-      {% elif key == 'legal_basis_name' %}
-        <tr>
-          <td class="label">Legal Basis</td>
-          <td>
-            {% if authority.legal_basis_link %}
-              <a href="{{ authority.legal_basis_link }}" target="_blank">{{ value }}</a>
-            {% else %}
-              {{ value }}
-            {% endif %}
-          </td>
-        </tr>
-      {% elif value is string %}
-        <tr>
-          <td class="label">{{ key.replace('_', ' ').title() }}</td>
-          <td>
-            {% if value.startswith('http') %}
-              <a href="{{ value }}" target="_blank">{{ value }}</a>
-            {% else %}
-              {{ value }}
-            {% endif %}
-          </td>
-        </tr>
-      {% elif value is iterable and value is not string %}
-        <tr>
-          <td class="label">{{ key.replace('_', ' ').title() }}</td>
-          <td>
-            <ul>
-              {% for item in value %}
-                {% if item is mapping and 'link' in item and 'name' in item %}
-                  <li><a href="{{ item.link }}" target="_blank">{{ item.name }}</a></li>
-                {% else %}
-                  <li>{{ item }}</li>
+    <main>
+        <!-- Remit Section -->
+        <div class="section">
+            <h2>Remit</h2>
+            <p>{{ authority.remit }}</p>
+        </div>
+
+        <!-- Factoid Section (optional but recommended) -->
+        {% if authority.factoid is defined and authority.factoid %}
+        <div class="factoid-box">
+            {{ authority.factoid }}
+        </div>
+        {% endif %}
+
+        <!-- Core Information -->
+        <div class="section">
+            <h2>Core Information</h2>
+            <div class="info-grid">
+                <div class="info-label">Type:</div>
+                <div class="info-value">{{ authority.type }}</div>
+
+                <div class="info-label">Established:</div>
+                <div class="info-value">{{ authority.year_established }}</div>
+
+                <div class="info-label">Country:</div>
+                <div class="info-value">{{ authority.establishment_country }}</div>
+
+                <div class="info-label">Regional Remit:</div>
+                <div class="info-value">{{ authority.regional_remit }}</div>
+
+                {% if authority.head_title is defined and authority.head_title %}
+                <div class="info-label">Leadership:</div>
+                <div class="info-value">{{ authority.head_title }}</div>
                 {% endif %}
-              {% endfor %}
-            </ul>
-          </td>
-        </tr>
-      {% endif %}
-    {% endfor %}
-  </table>
 
-  <footer style="margin-top:2rem; font-size:0.9rem; color:#555;">
-    <hr>
-    <p>
-      Part of the <strong>Authority Atlas</strong> open project.<br>
-      <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a>
-    </p>
-  </footer>
+                {% if authority.predecessor_organizations is defined and authority.predecessor_organizations %}
+                <div class="info-label">Predecessor:</div>
+                <div class="info-value">{{ authority.predecessor_organizations }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="section">
+            <h2>Location</h2>
+            <div class="info-grid">
+                <div class="info-label">Headquarters:</div>
+                <div class="info-value">{{ authority.headquarters_city }}, {{ authority.headquarters_country }}</div>
+
+                <div class="info-label">Address:</div>
+                <div class="info-value">{{ authority.headquarters_address }}</div>
+            </div>
+        </div>
+
+        <!-- Legal Basis -->
+        <div class="section">
+            <h2>Legal Basis</h2>
+            <p>{{ authority.legal_basis_name }}</p>
+            <a href="{{ authority.legal_basis_link }}" target="_blank" class="btn btn-secondary">View Legal Documents</a>
+        </div>
+
+        <!-- Official Links -->
+        <div class="section">
+            <h2>Official Sources</h2>
+            <div class="links">
+                <a href="{{ authority.website }}" target="_blank" class="btn">Official Website</a>
+                <a href="{{ authority.wikipedia }}" target="_blank" class="btn btn-secondary">Wikipedia</a>
+            </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="section">
+            <h2>Categories</h2>
+            <div class="tags">
+                {% for tag in authority.tags %}
+                <a href="index.html?search={{ tag | urlencode }}" class="tag">{{ tag }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Additional Resources (optional) -->
+        {% if authority.additional_resources is defined and authority.additional_resources %}
+        <div class="section">
+            <h2>Additional Resources</h2>
+            <ul class="resources">
+                {% for resource in authority.additional_resources %}
+                <li>
+                    <div class="resource-title">{{ resource.name }}</div>
+                    <div class="resource-description">{{ resource.description }}</div>
+                    <a href="{{ resource.link }}" target="_blank" class="btn btn-secondary">View Resource</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #ecf0f1; color: #7f8c8d; text-align: center;">
+        <p>
+          Part of the <strong>AuthorityAtlas</strong> open project<br>
+          An open-source database of authorities and organizations working for the common good<br>
+          Developed by <a href="https://ernestoexplains.com" target="_blank">ernestoexplains.com</a><br>
+          <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a> | 
+          <a href="index.html">View All Authorities</a> |
+          <a href="https://github.com/erngui/authority-atlas" target="_blank">GitHub</a>
+        </p>
+    </footer>
 </body>
 </html>
-

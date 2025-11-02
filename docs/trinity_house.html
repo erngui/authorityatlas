@@ -1,275 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Trinity House</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 800px;
-      margin: auto;
-      padding: 2rem;
-      line-height: 1.5;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    td {
-      padding: 0.5rem;
-      vertical-align: top;
-    }
-    td.label {
-      font-weight: bold;
-      width: 30%;
-      text-transform: capitalize;
-    }
-    h1 {
-      margin-bottom: 0.5rem;
-    }
-    h2 {
-      margin-top: 2rem;
-      font-size: 1.2rem;
-    }
-    a {
-      color: #0645AD;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    ul {
-      margin: 0;
-      padding-left: 1.2rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trinity House - Authority Atlas</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        header {
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .acronym {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 10px 20px;
+            margin-bottom: 20px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+        .info-value {
+            color: #2c3e50;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .tag {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .tag:hover {
+            background-color: #2980b9;
+            cursor: pointer;
+        }
+        .factoid-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .resources {
+            list-style: none;
+            padding: 0;
+        }
+        .resources li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .resources li:last-child {
+            border-bottom: none;
+        }
+        .resource-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .resource-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .logo {
+            max-width: 200px;
+            max-height: 100px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+    </style>
 </head>
 <body>
-  <h1>Trinity House</h1>
-
-  <table>
+    <a href="index.html" class="back-link">← Back to Atlas</a>
     
-      
+    <header>
         
-      
-    
-      
-        <tr>
-          <td class="label">Acronym</td>
-          <td>
-            
-              TH
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Remit</td>
-          <td>
-            
-              General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar.
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Type</td>
-          <td>
-            
-              Royal Charter corporation and registered charity
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Legal Basis</td>
-          <td>
-            
-              <a href="https://www.trinityhouse.co.uk/about-us/what-we-do/charter-and-bye-laws" target="_blank">Royal Charter</a>
-            
-          </td>
-        </tr>
-      
-    
-      
+        <img src="images/trinity_house_logo.png" alt="Trinity House logo" class="logo">
         
-      
-    
-      
-        <tr>
-          <td class="label">Establishment Country</td>
-          <td>
-            
-              United Kingdom
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Regional Remit</td>
-          <td>
-            
-              England, Wales, Channel Islands, Gibraltar
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Website</td>
-          <td>
-            
-              <a href="https://www.trinityhouse.co.uk" target="_blank">https://www.trinityhouse.co.uk</a>
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Wikipedia</td>
-          <td>
-            
-              <a href="https://en.wikipedia.org/wiki/Trinity_House" target="_blank">https://en.wikipedia.org/wiki/Trinity_House</a>
-            
-          </td>
-        </tr>
-      
-    
-      
-    
-      
-        <tr>
-          <td class="label">Legal Representative</td>
-          <td>
-            
-              Master
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Description</td>
-          <td>
-            
-              Trinity House is responsible for providing aids to navigation and is one of the oldest organizations of its kind in the world.
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Factoid</td>
-          <td>
-            
-              Trinity House was established by Henry VIII in 1514 and is one of the oldest organizations of its kind in the world.
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Tags</td>
-          <td>
-            <ul>
-              
-                
-                  <li>England</li>
-                
-              
-                
-                  <li>Wales</li>
-                
-              
-                
-                  <li>Channel Islands</li>
-                
-              
-                
-                  <li>Gibraltar</li>
-                
-              
-                
-                  <li>Lighthouses</li>
-                
-              
-                
-                  <li>Navigation</li>
-                
-              
-                
-                  <li>Maritime Safety</li>
-                
-              
-                
-                  <li>Royal Charter</li>
-                
-              
-                
-                  <li>Charity</li>
-                
-              
-                
-                  <li>Public Service</li>
-                
-              
-            </ul>
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Image</td>
-          <td>
-            
-              images/trinity_house_logo.png
-            
-          </td>
-        </tr>
-      
-    
-      
-        <tr>
-          <td class="label">Fact Checking Websites</td>
-          <td>
-            <ul>
-              
-                
-                  <li><a href="https://www.gracesguide.co.uk/Trinity_House" target="_blank">Grace's Guide to British Industrial History</a></li>
-                
-              
-                
-                  <li><a href="https://www.gov.uk/government/organisations/trinity-house" target="_blank">UK Government Official Website</a></li>
-                
-              
-            </ul>
-          </td>
-        </tr>
-      
-    
-  </table>
+        <h1>Trinity House</h1>
+        <p class="acronym">TH</p>
+    </header>
 
-  <footer style="margin-top:2rem; font-size:0.9rem; color:#555;">
-    <hr>
-    <p>
-      Part of the <strong>Authority Atlas</strong> open project.<br>
-      <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a>
-    </p>
-  </footer>
+    <main>
+        <!-- Remit Section -->
+        <div class="section">
+            <h2>Remit</h2>
+            <p>General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar, responsible for maritime navigation aids including lighthouses, buoys, and beacons.</p>
+        </div>
+
+        <!-- Factoid Section (optional but recommended) -->
+        
+        <div class="factoid-box">
+            Trinity House was <a href="https://www.trinityhouse.co.uk/about-us/history-of-trinity-house/th500" target="_blank">established by Royal Charter in 1514</a> after Thames mariners petitioned the king in 1513 for powers to regulate dangerous unqualified pilots. It represents one of the world's oldest continuously operating maritime safety organizations, predating most modern regulatory concepts.
+        </div>
+        
+
+        <!-- Core Information -->
+        <div class="section">
+            <h2>Core Information</h2>
+            <div class="info-grid">
+                <div class="info-label">Type:</div>
+                <div class="info-value">Executive non-departmental public body</div>
+
+                <div class="info-label">Established:</div>
+                <div class="info-value">1514</div>
+
+                <div class="info-label">Country:</div>
+                <div class="info-value">United Kingdom</div>
+
+                <div class="info-label">Regional Remit:</div>
+                <div class="info-value">England, Wales, Channel Islands, Gibraltar</div>
+
+                
+                <div class="info-label">Leadership:</div>
+                <div class="info-value">Master</div>
+                
+
+                
+                <div class="info-label">Predecessor:</div>
+                <div class="info-value">Guild of Mariners of Deptford Strand (informal mariners' association, pre-1514)</div>
+                
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="section">
+            <h2>Location</h2>
+            <div class="info-grid">
+                <div class="info-label">Headquarters:</div>
+                <div class="info-value">London, United Kingdom</div>
+
+                <div class="info-label">Address:</div>
+                <div class="info-value">Tower Hill, London EC3N 4DH, United Kingdom</div>
+            </div>
+        </div>
+
+        <!-- Legal Basis -->
+        <div class="section">
+            <h2>Legal Basis</h2>
+            <p>Royal Charter of 1685 and Merchant Shipping Act 1995</p>
+            <a href="https://www.legislation.gov.uk/ukpga/1995/21/contents" target="_blank" class="btn btn-secondary">View Legal Documents</a>
+        </div>
+
+        <!-- Official Links -->
+        <div class="section">
+            <h2>Official Sources</h2>
+            <div class="links">
+                <a href="https://www.trinityhouse.co.uk/" target="_blank" class="btn">Official Website</a>
+                <a href="https://en.wikipedia.org/wiki/Trinity_House" target="_blank" class="btn btn-secondary">Wikipedia</a>
+            </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="section">
+            <h2>Categories</h2>
+            <div class="tags">
+                
+                <a href="index.html?search=United%20Kingdom" class="tag">United Kingdom</a>
+                
+                <a href="index.html?search=England" class="tag">England</a>
+                
+                <a href="index.html?search=Wales" class="tag">Wales</a>
+                
+                <a href="index.html?search=Channel%20Islands" class="tag">Channel Islands</a>
+                
+                <a href="index.html?search=Gibraltar" class="tag">Gibraltar</a>
+                
+                <a href="index.html?search=Lighthouses" class="tag">Lighthouses</a>
+                
+                <a href="index.html?search=Navigation%20Aids" class="tag">Navigation Aids</a>
+                
+                <a href="index.html?search=Maritime%20Safety" class="tag">Maritime Safety</a>
+                
+                <a href="index.html?search=Royal%20Charter" class="tag">Royal Charter</a>
+                
+                <a href="index.html?search=Charity" class="tag">Charity</a>
+                
+                <a href="index.html?search=Public%20Service" class="tag">Public Service</a>
+                
+                <a href="index.html?search=Coastal%20Navigation" class="tag">Coastal Navigation</a>
+                
+                <a href="index.html?search=Henry%20VIII" class="tag">Henry VIII</a>
+                
+                <a href="index.html?search=Historic" class="tag">Historic</a>
+                
+            </div>
+        </div>
+
+        <!-- Additional Resources (optional) -->
+        
+        <div class="section">
+            <h2>Additional Resources</h2>
+            <ul class="resources">
+                
+                <li>
+                    <div class="resource-title">Grace's Guide to British Industrial History</div>
+                    <div class="resource-description">Comprehensive historical account of Trinity House's founding, development of lighthouse technology, and role in British maritime commerce from the Tudor period through industrialization.</div>
+                    <a href="https://www.gracesguide.co.uk/Trinity_House" target="_blank" class="btn btn-secondary">View Resource</a>
+                </li>
+                
+                <li>
+                    <div class="resource-title">UK Government Official Page</div>
+                    <div class="resource-description">Current statutory responsibilities and relationship with the Department for Transport, including modern regulatory framework for General Lighthouse Authorities.</div>
+                    <a href="https://www.gov.uk/government/organisations/trinity-house" target="_blank" class="btn btn-secondary">View Resource</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+    </main>
+
+    <footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #ecf0f1; color: #7f8c8d; text-align: center;">
+        <p>
+          Part of the <strong>AuthorityAtlas</strong> open project<br>
+          An open-source database of authorities and organizations working for the common good<br>
+          Developed by <a href="https://ernestoexplains.com" target="_blank">ernestoexplains.com</a><br>
+          <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a> | 
+          <a href="index.html">View All Authorities</a> |
+          <a href="https://github.com/erngui/authority-atlas" target="_blank">GitHub</a>
+        </p>
+    </footer>
 </body>
 </html>
