@@ -1,0 +1,59 @@
+authorities:
+
+- name: "International Civil Aviation Organization"
+  acronym: "ICAO"
+  
+  # Core identification
+  type: "United Nations specialized agency"
+  remit: "Develops international civil aviation Standards and Recommended Practices (SARPs) to ensure safe, secure, efficient, and environmentally responsible global air navigation."
+  
+  # Discoverability
+  establishment_country: "Canada"
+  regional_remit: "Global"
+  
+  # Location (for mapping and contact)
+  headquarters_address: "999 Robert-Bourassa Boulevard, Montréal, Quebec H3C 5H7, Canada"
+  headquarters_city: "Montreal"
+  headquarters_country: "Canada"
+  
+  # Dates (year only for simplicity)
+  year_established: 1944
+  
+  # Organizational evolution
+  predecessor_organizations: "International Commission for Air Navigation (ICAN)"
+  
+  # Links to authoritative sources
+  website: "https://www.icao.int/"
+  wikipedia: "https://en.wikipedia.org/wiki/International_Civil_Aviation_Organization"
+  
+  # Factoid - Context and significance: Why this authority exists, its place in the regulatory ecosystem,
+  # and what makes it notable. Focus on: (1) category/similar authorities, (2) origin story/historical moment,
+  # (3) significance. Aim for 1-3 sentences that instill wonder about the regulatory landscape.
+  factoid: "ICAO manages over 12,000 Standards and Recommended Practices (SARPs), forming the backbone of international air navigation across 193 countries."
+  
+  # Legal basis (founding documents and current framework)
+  legal_basis_name: "Convention on International Civil Aviation (Chicago Convention), 1944"
+  legal_basis_link: "https://www.icao.int/publications/pages/doc7300.aspx"
+  
+  # Leadership structure
+  head_title: "President of the Council"
+  
+  # Tags for search/filtering
+  tags: ["Global", "Air Navigation", "Civil Aviation", "UN Agency", "Aviation Safety", "International Standards", "Montreal", "Airspace", "ICAO", "Chicago Convention", "Flight Rules", "Global Travel"]
+  
+  # Image
+  image: "images/icao_logo.png"
+  
+  # Additional resources beyond official website and Wikipedia
+  additional_resources:
+    - name: "ICAO SARPs Overview"
+      description: "Official ICAO explanation of Standards and Recommended Practices (SARPs), how they work, and their role in global aviation."
+      link: "https://www.icao.int/safety-management/sarps-standards-and-recommended-practices"
+      
+    - name: "SKYbrary: ICAO SARPs Explained"
+      description: "Aviation knowledge base article breaking down the structure, purpose, and global adoption of ICAO SARPs in accessible terms."
+      link: "https://skybrary.aero/articles/standards-and-recommended-practices-sarps"
+      
+    - name: "IFATCA: Making SARPs – How Does It Work?"
+      description: "Detailed walkthrough from the International Federation of Air Traffic Controllers' Associations on how SARPs are developed within ICAO."
+      link: "https://ifatca.org/icao-activities/making-sarps-how-does-it-work/"
