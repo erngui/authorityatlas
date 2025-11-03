@@ -345,11 +345,9 @@
 
   <footer>
     <p>
-      Part of the <strong>AuthorityAtlas</strong> open project<br>
-      An open-source database of authorities and organizations working for the common good<br>
-      Developed by <a href="https://ernestoexplains.com" target="_blank">ernestoexplains.com</a><br>
+     Developed by <a href="https://ernestoexplains.com" target="_blank">ernestoexplains.com</a> | 
       <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a> | 
-      <a href="https://github.com/erngui/authority-atlas" target="_blank">GitHub</a>
+      <a href="https://github.com/erngui/authorityatlas" target="_blank">Contribute!</a>
     </p>
   </footer>
 
@@ -489,7 +487,7 @@
           (entry.establishment_country && entry.establishment_country.toLowerCase().includes(query));
 
         // Country filter
-        const countryMatch = !selectedCountry || entry.establishment_country === selectedCountry;
+        const countryMatch = !selectedCountry || entry.establishment_country_name === selectedCountry;
 
         // Type filter
         const typeMatch = !selectedType || entry.type === selectedType;
