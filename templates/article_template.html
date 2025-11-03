@@ -174,7 +174,7 @@
                 <div class="info-value">{{ authority.year_established }}</div>
 
                 <div class="info-label">Country:</div>
-                <div class="info-value">{{ authority.establishment_country }}</div>
+                <div class="info-value country-code" data-country-code="{{ authority.establishment_country }}">{{ authority.establishment_country_name }}</div>
 
                 <div class="info-label">Regional Remit:</div>
                 <div class="info-value">{{ authority.regional_remit }}</div>
@@ -196,7 +196,7 @@
             <h2>Location</h2>
             <div class="info-grid">
                 <div class="info-label">Headquarters:</div>
-                <div class="info-value">{{ authority.headquarters_city }}, {{ authority.headquarters_country }}</div>
+                <div class="info-value country-code" data-country-code="{{ authority.headquarters_country }}">{{ authority.headquarters_city }}, {{ authority.headquarters_country_name }}</div>
 
                 <div class="info-label">Address:</div>
                 <div class="info-value">{{ authority.headquarters_address }}</div>
@@ -256,5 +256,34 @@
           <a href="https://github.com/erngui/authority-atlas" target="_blank">GitHub</a>
         </p>
     </footer>
+
+    <script>
+        // Convert ISO country code to flag emoji
+        function getFlag(countryCode) {
+            if (countryCode === 'EU') return '🇪🇺';
+            if (!countryCode || countryCode.length !== 2) return '🌍';
+            
+            // Convert to regional indicator symbols (flag emoji)
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
+
+        // Add flags to country displays on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find country code elements and add flags
+            const countryElements = document.querySelectorAll('.country-code');
+            countryElements.forEach(function(element) {
+                const countryCode = element.getAttribute('data-country-code');
+                if (countryCode) {
+                    const flag = getFlag(countryCode);
+                    element.textContent = flag + ' ' + element.textContent;
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>

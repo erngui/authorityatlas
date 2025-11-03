@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AuthorityAtlas - A comprehensive directory of regulatory authorities working for the common good.</title>
+  <title>AuthorityAtlas - A Comprehensive Directory of Regulatory Authorities</title>
   <meta name="description" content="AuthorityAtlas is an open directory of regulatory authorities, government agencies, and standards bodies from around the world.">
   <style>
     * {
@@ -310,7 +310,7 @@
     </div>
     <div class="site-title-wrapper">
       <h1 class="site-title">AuthorityAtlas</h1>
-      <div class="subtitle">A comprehensive directory of regulatory authorities working for the common good</div>
+      <div class="subtitle">A Comprehensive Directory of Regulatory Authorities</div>
     </div>
   </div>
 
@@ -349,7 +349,7 @@
       An open-source database of authorities and organizations working for the common good<br>
       Developed by <a href="https://ernestoexplains.com" target="_blank">ernestoexplains.com</a><br>
       <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a> | 
-      <a href="https://github.com/erngui/authorityatlas" target="_blank">GitHub</a>
+      <a href="https://github.com/erngui/authority-atlas" target="_blank">GitHub</a>
     </p>
   </footer>
 
@@ -361,6 +361,19 @@
     const typeFilter = document.getElementById('typeFilter');
     const sortFilter = document.getElementById('sortFilter');
     const statsDiv = document.getElementById('stats');
+
+    // Convert ISO country code to flag emoji
+    function getFlag(countryCode) {
+      if (countryCode === 'EU') return '🇪🇺';
+      if (!countryCode || countryCode.length !== 2) return '🌍';
+      
+      // Convert to regional indicator symbols (flag emoji)
+      const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt());
+      return String.fromCodePoint(...codePoints);
+    }
 
     // Check for search parameter in URL
     function loadSearchFromURL() {
@@ -377,7 +390,7 @@
       const types = new Set();
 
       allArticles.forEach(article => {
-        if (article.establishment_country) countries.add(article.establishment_country);
+        if (article.establishment_country_name) countries.add(article.establishment_country_name);
         if (article.type) types.add(article.type);
       });
 
@@ -423,8 +436,8 @@
           <div class="entry-meta">
             ${entry.establishment_country ? `
               <span class="meta-item">
-                <span class="meta-icon">🌍</span>
-                ${entry.establishment_country}
+                <span class="meta-icon">${getFlag(entry.establishment_country)}</span>
+                ${entry.establishment_country_name}
               </span>
             ` : ''}
             ${entry.year_established ? `

@@ -3,6 +3,7 @@ import yaml
 import json
 import re
 from jinja2 import Template
+import pycountry
 
 # Configuration
 INPUT_DIR = "data/articles"
@@ -31,6 +32,59 @@ def markdown_links_to_html(text):
     pattern = r'\[([^\]]+)\]\(([^\)]+)\)'
     replacement = r'<a href="\2" target="_blank">\1</a>'
     return re.sub(pattern, replacement, text)
+
+def normalize_country_to_code(country_value):
+    """Convert country names to ISO 3166-1 alpha-2 codes using pycountry. Pass through if already a code."""
+    if not country_value:
+        return country_value
+    
+    # If already a 2-letter code, validate and return
+    if len(country_value) == 2 and country_value.isupper():
+        try:
+            pycountry.countries.get(alpha_2=country_value)
+            return country_value
+        except (KeyError, AttributeError):
+            pass
+    
+    # Special cases not in ISO 3166-1
+    special_cases = {
+        'European Union': 'EU',
+        'England': 'GB',
+        'Scotland': 'GB',
+        'Wales': 'GB',
+        'Northern Ireland': 'GB'
+    }
+    
+    if country_value in special_cases:
+        return special_cases[country_value]
+    
+    # Try to find by name
+    try:
+        country = pycountry.countries.search_fuzzy(country_value)[0]
+        return country.alpha_2
+    except (LookupError, AttributeError, IndexError):
+        # If not found, return original value
+        print(f"  ⚠️ Warning: Could not find ISO code for country: {country_value}")
+        return country_value
+
+def get_country_name(country_code):
+    """Get country name from ISO code using pycountry."""
+    if not country_code:
+        return country_code
+    
+    # Special cases
+    special_names = {
+        'EU': 'European Union'
+    }
+    
+    if country_code in special_names:
+        return special_names[country_code]
+    
+    try:
+        country = pycountry.countries.get(alpha_2=country_code)
+        return country.name
+    except (KeyError, AttributeError):
+        return country_code
 
 def process_authority_fields(authority):
     """Process text fields that may contain markdown links."""
@@ -112,8 +166,18 @@ for filename in os.listdir(INPUT_DIR):
         for authority in data['authorities']:
             validate_authority(authority, filename)
             
+            # Normalize country fields to ISO codes
+            if 'establishment_country' in authority:
+                authority['establishment_country'] = normalize_country_to_code(authority['establishment_country'])
+            if 'headquarters_country' in authority:
+                authority['headquarters_country'] = normalize_country_to_code(authority['headquarters_country'])
+            
             # Process markdown links to HTML
             authority = process_authority_fields(authority)
+            
+            # Add country names for display (in addition to codes)
+            authority['establishment_country_name'] = get_country_name(authority.get('establishment_country', ''))
+            authority['headquarters_country_name'] = get_country_name(authority.get('headquarters_country', ''))
             
             # Safe file name
             safe_name = authority['name'].replace(" ", "_").replace("/", "-").lower()
@@ -138,6 +202,7 @@ for filename in os.listdir(INPUT_DIR):
                 'factoid': authority.get('factoid', ''),  # Use factoid instead of description for preview
                 'type': authority.get('type', ''),
                 'establishment_country': authority.get('establishment_country', ''),
+                'establishment_country_name': get_country_name(authority.get('establishment_country', '')),
                 'year_established': authority.get('year_established', ''),
                 'website': authority.get('website', ''),
                 'wikipedia': authority.get('wikipedia', ''),

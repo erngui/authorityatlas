@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AuthorityAtlas - A comprehensive directory of regulatory authorities working for the common good.</title>
+  <title>AuthorityAtlas - A Comprehensive Directory of Regulatory Authorities</title>
   <meta name="description" content="AuthorityAtlas is an open directory of regulatory authorities, government agencies, and standards bodies from around the world.">
   <style>
     * {
@@ -310,7 +310,7 @@
     </div>
     <div class="site-title-wrapper">
       <h1 class="site-title">AuthorityAtlas</h1>
-      <div class="subtitle">A comprehensive directory of regulatory authorities working for the common good</div>
+      <div class="subtitle">A Comprehensive Directory of Regulatory Authorities</div>
     </div>
   </div>
 
@@ -349,18 +349,31 @@
       An open-source database of authorities and organizations working for the common good<br>
       Developed by <a href="https://ernestoexplains.com" target="_blank">ernestoexplains.com</a><br>
       <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a> | 
-      <a href="https://github.com/erngui/authorityatlas" target="_blank">GitHub</a>
+      <a href="https://github.com/erngui/authority-atlas" target="_blank">GitHub</a>
     </p>
   </footer>
 
   <script>
-    const allArticles = [{"acronym": "TH", "establishment_country": "United Kingdom", "factoid": "Trinity House was \u003ca href=\"https://www.trinityhouse.co.uk/about-us/history-of-trinity-house/th500\" target=\"_blank\"\u003eestablished by Royal Charter in 1514\u003c/a\u003e after Thames mariners petitioned the king in 1513 for powers to regulate dangerous unqualified pilots. It represents one of the world\u0027s oldest continuously operating maritime safety organizations, predating most modern regulatory concepts.", "filename": "trinity_house.html", "name": "Trinity House", "remit": "General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar, responsible for maritime navigation aids including lighthouses, buoys, and beacons.", "type": "Executive non-departmental public body", "website": "https://www.trinityhouse.co.uk/", "wikipedia": "https://en.wikipedia.org/wiki/Trinity_House", "year_established": 1514}];
+    const allArticles = [{"acronym": "ICAO", "establishment_country": "CA", "establishment_country_name": "Canada", "factoid": "ICAO manages over 12,000 Standards and Recommended Practices (SARPs), forming the backbone of international air navigation across 193 countries.", "filename": "international_civil_aviation_organization.html", "name": "International Civil Aviation Organization", "remit": "Develops international civil aviation Standards and Recommended Practices (SARPs) to ensure safe, secure, efficient, and environmentally responsible global air navigation.", "type": "United Nations specialized agency", "website": "https://www.icao.int/", "wikipedia": "https://en.wikipedia.org/wiki/International_Civil_Aviation_Organization", "year_established": 1944}, {"acronym": "TH", "establishment_country": "GB", "establishment_country_name": "United Kingdom", "factoid": "Trinity House was \u003ca href=\"https://www.trinityhouse.co.uk/about-us/history-of-trinity-house/th500\" target=\"_blank\"\u003eestablished by Royal Charter in 1514\u003c/a\u003e after Thames mariners petitioned the king in 1513 for powers to regulate dangerous unqualified pilots. It represents one of the world\u0027s oldest continuously operating maritime safety organizations, predating most modern regulatory concepts.", "filename": "trinity_house.html", "name": "Trinity House", "remit": "General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar, responsible for maritime navigation aids including lighthouses, buoys, and beacons.", "type": "Executive non-departmental public body", "website": "https://www.trinityhouse.co.uk/", "wikipedia": "https://en.wikipedia.org/wiki/Trinity_House", "year_established": 1514}];
     const resultsContainer = document.getElementById('results');
     const searchInput = document.getElementById('searchInput');
     const countryFilter = document.getElementById('countryFilter');
     const typeFilter = document.getElementById('typeFilter');
     const sortFilter = document.getElementById('sortFilter');
     const statsDiv = document.getElementById('stats');
+
+    // Convert ISO country code to flag emoji
+    function getFlag(countryCode) {
+      if (countryCode === 'EU') return '🇪🇺';
+      if (!countryCode || countryCode.length !== 2) return '🌍';
+      
+      // Convert to regional indicator symbols (flag emoji)
+      const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt());
+      return String.fromCodePoint(...codePoints);
+    }
 
     // Check for search parameter in URL
     function loadSearchFromURL() {
@@ -377,7 +390,7 @@
       const types = new Set();
 
       allArticles.forEach(article => {
-        if (article.establishment_country) countries.add(article.establishment_country);
+        if (article.establishment_country_name) countries.add(article.establishment_country_name);
         if (article.type) types.add(article.type);
       });
 
@@ -423,8 +436,8 @@
           <div class="entry-meta">
             ${entry.establishment_country ? `
               <span class="meta-item">
-                <span class="meta-icon">🌍</span>
-                ${entry.establishment_country}
+                <span class="meta-icon">${getFlag(entry.establishment_country)}</span>
+                ${entry.establishment_country_name}
               </span>
             ` : ''}
             ${entry.year_established ? `
