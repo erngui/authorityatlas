@@ -15,11 +15,11 @@ authorities:
 
   # Core identification
   type: "Regional water authority (Waterschap)"
-  remit: "Manages water levels, flood protection, and water quality in the Rijnland region between Wassenaar, Velsen, Amsterdam, and Gouda, ensuring clean water and protection from flooding."
+  remit: "Manages water levels, flood protection, and water quality in the Rijnland region between roughly Velsen and Gouda, ensuring clean water and protection from flooding."
 
   # Discoverability
   establishment_country: "Netherlands"
-  regional_remit: "Rijnland region (South Holland and North Holland provinces)"
+  regional_remit: "Rijnland region"
 
   # Location (for mapping and contact)
   headquarters_address: "Archimedesweg 1, 2333 CM Leiden, Netherlands"
@@ -39,14 +39,14 @@ authorities:
   # Factoid - Context and significance: Why this authority exists, its place in the regulatory ecosystem,
   # and what makes it notable. Focus on: (1) category/similar authorities, (2) origin story/historical moment,
   # (3) significance. Aim for 1-3 sentences that instill wonder about the regulatory landscape.
-  factoid: "Established in 1248 after severe flooding, Hoogheemraadschap van Rijnland is the oldest water authority in the Netherlands and among the oldest democratic institutions in the world. It represents the Dutch tradition of water boards (waterschappen), independent governing bodies with taxing authority that predate the modern nation-state and embody the principle that water management requires collective action transcending ordinary political boundaries."
+  factoid: "The oldest water authority in the Netherlands. Mission statement: Dry feet and clean water."
 
   # Legal basis (founding documents and current framework)
-  legal_basis_name: "Water Board Act (Waterschapswet) and original commission from Count William II of Holland and Zeeland, 1248"
-  legal_basis_link: "https://wetten.overheid.nl/BWBR0005108/2024-01-01"
+  legal_basis_name: "Water Board Act (Waterschapswet, 1991) and original commission from Count William II of Holland and Zeeland, 1248"
+  legal_basis_link: "https://wetten.overheid.nl/BWBR0005108/"
 
   # Leadership structure
-  head_title: "Dijkgraaf (Dike Reeve)"
+  head_title: "Dijkgraaf (literally Dike Count)"
 
   # Tags for search/filtering
   tags: ["Netherlands", "Water Management", "Flood Protection", "Regional Authority", "Water Quality", "Leiden", "South Holland", "Historic", "Medieval", "Water Board", "Waterschappen", "Dutch Water", "Rhine", "Democracy", "1248"]

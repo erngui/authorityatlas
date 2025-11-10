@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoogheemraadschap van Rijnland - AuthorityAtlas</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        header {
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .acronym {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 10px 20px;
+            margin-bottom: 20px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+        .info-value {
+            color: #2c3e50;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .tag {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .tag:hover {
+            background-color: #2980b9;
+            cursor: pointer;
+        }
+        .factoid-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .resources {
+            list-style: none;
+            padding: 0;
+        }
+        .resources li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .resources li:last-child {
+            border-bottom: none;
+        }
+        .resource-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .resource-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .authority-context {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-style: italic;
+            margin: -10px 0 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .authority-context p {
+            margin: 0;
+        }
+        
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to AuthorityAtlas</a>
+    
+    <header>
+        
+        <h1>Hoogheemraadschap van Rijnland</h1>
+        <p class="acronym">HHR</p>
+    </header>
+
+    <div class="authority-context">
+        <p>Part of the global network of authorities working for the common good</p>
+    </div>
+
+    <main>
+        <!-- Remit Section -->
+        <div class="section">
+            <h2>Remit</h2>
+            <p>Manages water levels, flood protection, and water quality in the Rijnland region between roughly Velsen and Gouda, ensuring clean water and protection from flooding.</p>
+        </div>
+
+        <!-- Factoid Section (optional but recommended) -->
+        
+        <div class="factoid-box">
+            The oldest water authority in the Netherlands. Mission statement: Dry feet and clean water.
+        </div>
+        
+
+        <!-- Core Information -->
+        <div class="section">
+            <h2>Core Information</h2>
+            <div class="info-grid">
+                <div class="info-label">Type:</div>
+                <div class="info-value">Regional water authority (Waterschap)</div>
+
+                <div class="info-label">Established:</div>
+                <div class="info-value">1248</div>
+
+                <div class="info-label">Country:</div>
+                <div class="info-value country-code" data-country-code="NL">Netherlands</div>
+
+                <div class="info-label">Regional Remit:</div>
+                <div class="info-value">Rijnland region</div>
+
+                
+                <div class="info-label">Leadership:</div>
+                <div class="info-value">Dijkgraaf (literally Dike Count)</div>
+                
+
+                
+                <div class="info-label">Predecessor:</div>
+                <div class="info-value">Informal cooperating water boards along the Oude Rijn (Old Rhine) river (pre-1248)</div>
+                
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="section">
+            <h2>Location</h2>
+            <div class="info-grid">
+                <div class="info-label">Headquarters:</div>
+                <div class="info-value country-code" data-country-code="NL">Leiden, Netherlands</div>
+
+                <div class="info-label">Address:</div>
+                <div class="info-value">Archimedesweg 1, 2333 CM Leiden, Netherlands</div>
+            </div>
+        </div>
+
+        <!-- Legal Basis -->
+        <div class="section">
+            <h2>Legal Basis</h2>
+            <p>Water Board Act (Waterschapswet, 1991) and original commission from Count William II of Holland and Zeeland, 1248</p>
+            <a href="https://wetten.overheid.nl/BWBR0005108/" target="_blank" class="btn btn-secondary">View Legal Documents</a>
+        </div>
+
+        <!-- Official Links -->
+        <div class="section">
+            <h2>Official Sources</h2>
+            <div class="links">
+                <a href="https://www.rijnland.net/" target="_blank" class="btn">Official Website</a>
+                <a href="https://en.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland" target="_blank" class="btn btn-secondary">Wikipedia</a>
+            </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="section">
+            <h2>Categories</h2>
+            <div class="tags">
+                
+                <a href="index.html?search=Netherlands" class="tag">Netherlands</a>
+                
+                <a href="index.html?search=Water%20Management" class="tag">Water Management</a>
+                
+                <a href="index.html?search=Flood%20Protection" class="tag">Flood Protection</a>
+                
+                <a href="index.html?search=Regional%20Authority" class="tag">Regional Authority</a>
+                
+                <a href="index.html?search=Water%20Quality" class="tag">Water Quality</a>
+                
+                <a href="index.html?search=Leiden" class="tag">Leiden</a>
+                
+                <a href="index.html?search=South%20Holland" class="tag">South Holland</a>
+                
+                <a href="index.html?search=Historic" class="tag">Historic</a>
+                
+                <a href="index.html?search=Medieval" class="tag">Medieval</a>
+                
+                <a href="index.html?search=Water%20Board" class="tag">Water Board</a>
+                
+                <a href="index.html?search=Waterschappen" class="tag">Waterschappen</a>
+                
+                <a href="index.html?search=Dutch%20Water" class="tag">Dutch Water</a>
+                
+                <a href="index.html?search=Rhine" class="tag">Rhine</a>
+                
+                <a href="index.html?search=Democracy" class="tag">Democracy</a>
+                
+                <a href="index.html?search=1248" class="tag">1248</a>
+                
+            </div>
+        </div>
+
+        <!-- Additional Resources (optional) -->
+        
+        <div class="section">
+            <h2>Additional Resources</h2>
+            <ul class="resources">
+                
+                <li>
+                    <div class="resource-title">About Rijnland (English)</div>
+                    <div class="resource-description">Official English-language overview of Rijnland's mission, activities, and organizational structure in modern water management context.</div>
+                    <a href="https://www.rijnland.net/about-rijnland-eng/" target="_blank" class="btn btn-secondary">View Resource</a>
+                </li>
+                
+                <li>
+                    <div class="resource-title">Dutch Water Authorities: The Dutch Water Authority Model</div>
+                    <div class="resource-description">Comprehensive PDF explaining the unique governance structure, legal framework, and democratic functioning of Dutch water boards including their historical development.</div>
+                    <a href="https://dutchwaterauthorities.com/wp-content/uploads/2021/05/The-Dutch-water-authority-model.pdf" target="_blank" class="btn btn-secondary">View Resource</a>
+                </li>
+                
+                <li>
+                    <div class="resource-title">Water Board (Netherlands) - Wikipedia</div>
+                    <div class="resource-description">Detailed article on the Dutch water board system, explaining how these ancient democratic institutions function as independent governing bodies with taxing authority.</div>
+                    <a href="https://en.wikipedia.org/wiki/Water_board_(Netherlands)" target="_blank" class="btn btn-secondary">View Resource</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+    </main>
+
+     <footer>
+    <p>
+     Developed by <a href="https://ernestoexplains.com" target="_blank">ernestoexplains.com</a> | 
+      <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a> | 
+      <a href="https://github.com/erngui/authorityatlas" target="_blank">Contribute!</a>
+    </p>
+  </footer>
+
+    <script>
+        // Convert ISO country code to flag emoji
+        function getFlag(countryCode) {
+            if (countryCode === 'EU') return '🇪🇺';
+            if (!countryCode || countryCode.length !== 2) return '🌍';
+            
+            // Convert to regional indicator symbols (flag emoji)
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
+
+        // Add flags to country displays on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find country code elements and add flags
+            const countryElements = document.querySelectorAll('.country-code');
+            countryElements.forEach(function(element) {
+                const countryCode = element.getAttribute('data-country-code');
+                if (countryCode) {
+                    const flag = getFlag(countryCode);
+                    element.textContent = flag + ' ' + element.textContent;
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
