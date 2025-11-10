@@ -15,7 +15,7 @@ authorities:
 
   # Core identification
   type: "Regional water authority (Waterschap)"
-  remit: "Manages water levels, flood protection, and water quality in the Rijnland region between roughly Velsen and Gouda, ensuring clean water and protection from flooding."
+  remit: "Rijnland Regional Water Authority. Manages water levels, flood protection, and water quality in the region between roughly Velsen and Gouda, ensuring clean water and protection from flooding."
 
   # Discoverability
   establishment_country: "Netherlands"
