@@ -50,10 +50,7 @@ authorities:
   
   # Tags for search/filtering
   tags: ["United Kingdom", "England", "Wales", "Channel Islands", "Gibraltar", "Lighthouses", "Navigation Aids", "Maritime Safety", "Royal Charter", "Charity", "Public Service", "Coastal Navigation", "Henry VIII", "Historic"]
-  
-  # Image
-  image: "images/trinity_house_logo.png"
-  
+
   # Additional resources beyond official website and Wikipedia
   additional_resources:
     - name: "Grace's Guide to British Industrial History"

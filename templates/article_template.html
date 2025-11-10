@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ authority.name }} - Authority Atlas</title>
+    <title>{{ authority.name }} - AuthorityAtlas</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -128,7 +128,19 @@
         .back-link:hover {
             text-decoration: underline;
         }
-        {% if authority.image %}
+        .authority-context {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-style: italic;
+            margin: -10px 0 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .authority-context p {
+            margin: 0;
+        }
+        {% if authority.image is defined and authority.image %}
         .logo {
             max-width: 200px;
             max-height: 100px;
@@ -139,15 +151,19 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-link">← Back to Atlas</a>
+    <a href="index.html" class="back-link">← Back to AuthorityAtlas</a>
     
     <header>
-        {% if authority.image is defined %}
+        {% if authority.image is defined and authority.image %}
         <img src="{{ authority.image }}" alt="{{ authority.name }} logo" class="logo">
         {% endif %}
         <h1>{{ authority.name }}</h1>
         <p class="acronym">{{ authority.acronym }}</p>
     </header>
+
+    <div class="authority-context">
+        <p>Part of the global network of authorities working for the common good</p>
+    </div>
 
     <main>
         <!-- Remit Section -->

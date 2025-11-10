@@ -40,10 +40,7 @@ authorities:
   
   # Tags for search/filtering
   tags: ["Global", "Air Navigation", "Civil Aviation", "UN Agency", "Aviation Safety", "International Standards", "Montreal", "Airspace", "ICAO", "Chicago Convention", "Flight Rules", "Global Travel"]
-  
-  # Image
-  image: "images/icao_logo.png"
-  
+
   # Additional resources beyond official website and Wikipedia
   additional_resources:
     - name: "ICAO SARPs Overview"
