@@ -50,7 +50,7 @@ exclude_dirs = ["tests", ".venv"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=. --cov-branch --cov-fail-under=80 --cov-report=term-missing"
+addopts = "--cov=. --cov-branch --cov-fail-under=90 --cov-report=term-missing"
 
 [tool.coverage.run]
 source = ["."]
