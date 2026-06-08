@@ -1,0 +1,19 @@
+authorities:
+  - name: Test Maritime Authority
+    acronym: TMA
+    remit: Regulates [maritime safety](http://example.com/safety)
+    type: regulatory
+    legal_basis_name: Maritime Act 2000
+    legal_basis_link: http://example.com/act
+    establishment_country: GB
+    regional_remit: national
+    headquarters_city: London
+    headquarters_country: GB
+    headquarters_address: "1 Example Street, London, EC1A 1BB"
+    website: http://example.com
+    wikipedia: http://en.wikipedia.org/wiki/Test
+    year_established: 2000
+    tags:
+      - maritime
+      - safety
+    factoid: Founded in [2000](http://example.com) as a test authority.
