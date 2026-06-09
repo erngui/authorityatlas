@@ -221,6 +221,59 @@ def test_validate_accepts_additional_resources_as_list() -> None:
     validate_authority(authority, "test.yaml")  # must not raise
 
 
+def test_validate_accepts_wikidata_id_as_string() -> None:
+    authority = _valid()
+    authority["wikidata_id"] = "Q225070"
+    validate_authority(authority, "test.yaml")  # must not raise
+
+
+def test_validate_raises_when_wikidata_id_not_string() -> None:
+    authority = _valid()
+    authority["wikidata_id"] = 225070
+    with pytest.raises(TypeError, match="'wikidata_id' should be a string"):
+        validate_authority(authority, "test.yaml")
+
+
+def test_validate_accepts_valid_coordinates() -> None:
+    authority = _valid()
+    authority["coordinates"] = {"lat": 51.5074, "lon": -0.1278}
+    validate_authority(authority, "test.yaml")  # must not raise
+
+
+def test_validate_raises_when_coordinates_not_dict() -> None:
+    authority = _valid()
+    authority["coordinates"] = "51.5,-0.1"
+    with pytest.raises(TypeError, match="'coordinates' should be a dict"):
+        validate_authority(authority, "test.yaml")
+
+
+def test_validate_raises_when_coordinates_missing_lat() -> None:
+    authority = _valid()
+    authority["coordinates"] = {"lon": -0.1278}
+    with pytest.raises(ValueError, match="'coordinates' missing 'lat'"):
+        validate_authority(authority, "test.yaml")
+
+
+def test_validate_raises_when_coordinates_lat_not_number() -> None:
+    authority = _valid()
+    authority["coordinates"] = {"lat": "north", "lon": 0.0}
+    with pytest.raises(TypeError, match="'coordinates.lat' should be a number"):
+        validate_authority(authority, "test.yaml")
+
+
+def test_validate_accepts_wikipedia_multilang_dict() -> None:
+    authority = _valid()
+    authority["wikipedia_multilang"] = {"fr": "http://fr.wikipedia.org/wiki/Test"}
+    validate_authority(authority, "test.yaml")  # must not raise
+
+
+def test_validate_raises_when_wikipedia_multilang_not_dict() -> None:
+    authority = _valid()
+    authority["wikipedia_multilang"] = "http://fr.wikipedia.org/wiki/Test"
+    with pytest.raises(TypeError, match="'wikipedia_multilang' should be a dict"):
+        validate_authority(authority, "test.yaml")
+
+
 def test_validate_prints_missing_optional_fields(capsys: pytest.CaptureFixture[str]) -> None:
     validate_authority(_valid(), "test.yaml")
     output = capsys.readouterr().out
@@ -245,6 +298,27 @@ def test_generate_site_produces_html_files() -> None:
         assert os.path.isfile(article_path)
         with open(article_path, encoding="utf-8") as f:
             assert "Test Maritime Authority" in f.read()
+    finally:
+        shutil.rmtree(tmp)
+
+
+def test_generate_site_includes_new_fields_in_json() -> None:
+    import json
+
+    tmp = tempfile.mkdtemp()
+    out = os.path.join(tmp, "out")
+    try:
+        article_tmpl = Template("<html>{{ authority.name }}</html>")
+        index_tmpl = Template("{{ articles | tojson }}")
+        generate_site(FIXTURES_DIR, out, index_tmpl, article_tmpl)
+        with open(os.path.join(out, "index.html"), encoding="utf-8") as f:
+            articles = json.loads(f.read())
+        assert len(articles) == 1
+        a = articles[0]
+        assert a["wikidata_id"] == "Q12345"
+        assert a["coordinates"] == {"lat": 51.5074, "lon": -0.1278}
+        assert a["headquarters_city"] == "London"
+        assert "headquarters_country_name" in a
     finally:
         shutil.rmtree(tmp)
 

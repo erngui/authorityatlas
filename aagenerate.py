@@ -101,12 +101,30 @@ def validate_authority(authority: dict[str, Any], filename: str) -> None:
             raise TypeError(f"'additional_resources' should be a list in file: {filename}")
     if not isinstance(authority["year_established"], int):
         raise TypeError(f"'year_established' should be an integer in file: {filename}")
+    if authority.get("wikidata_id") is not None:
+        if not isinstance(authority["wikidata_id"], str):
+            raise TypeError(f"'wikidata_id' should be a string in file: {filename}")
+    if authority.get("coordinates") is not None:
+        coords = authority["coordinates"]
+        if not isinstance(coords, dict):
+            raise TypeError(f"'coordinates' should be a dict in file: {filename}")
+        for key in ("lat", "lon"):
+            if key not in coords:
+                raise ValueError(f"'coordinates' missing '{key}' in file: {filename}")
+            if not isinstance(coords[key], (int, float)):
+                raise TypeError(f"'coordinates.{key}' should be a number in file: {filename}")
+    if authority.get("wikipedia_multilang") is not None:
+        if not isinstance(authority["wikipedia_multilang"], dict):
+            raise TypeError(f"'wikipedia_multilang' should be a dict in file: {filename}")
     optional_fields = [
         "factoid",
         "head_title",
         "predecessor_organizations",
         "image",
         "additional_resources",
+        "wikidata_id",
+        "coordinates",
+        "wikipedia_multilang",
     ]
     missing_optional = [f for f in optional_fields if not authority.get(f)]
     if missing_optional:
@@ -180,6 +198,12 @@ def generate_site(
                     "website": authority.get("website", ""),
                     "wikipedia": authority.get("wikipedia", ""),
                     "filename": article_filename,
+                    "coordinates": authority.get("coordinates"),
+                    "wikidata_id": authority.get("wikidata_id", ""),
+                    "headquarters_city": authority.get("headquarters_city", ""),
+                    "headquarters_country_name": authority.get(
+                        "headquarters_country_name", ""
+                    ),
                 }
             )
             metadata_list.append(

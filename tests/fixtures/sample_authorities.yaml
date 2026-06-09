@@ -17,3 +17,10 @@ authorities:
       - maritime
       - safety
     factoid: Founded in [2000](http://example.com) as a test authority.
+    wikidata_id: "Q12345"
+    coordinates:
+      lat: 51.5074
+      lon: -0.1278
+    wikipedia_multilang:
+      en: http://en.wikipedia.org/wiki/Test
+      fr: http://fr.wikipedia.org/wiki/Test
