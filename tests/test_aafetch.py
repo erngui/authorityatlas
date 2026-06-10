@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import tempfile
 from typing import Any
@@ -93,6 +94,25 @@ def test_fetch_entity_raises_for_empty_results(mock_sparql: MagicMock) -> None:
     mock_sparql.return_value = _mock_response([])
     with pytest.raises(ValueError, match="No Wikidata results"):
         aafetch.fetch_entity("99999999")
+
+
+def test_fetch_entity_raises_for_invalid_qid(mock_sparql: MagicMock) -> None:
+    with pytest.raises(ValueError, match="Invalid Wikidata Q-ID"):
+        aafetch.fetch_entity("not-a-number")
+
+
+def test_fetch_entity_raises_for_injected_qid(mock_sparql: MagicMock) -> None:
+    with pytest.raises(ValueError, match="Invalid Wikidata Q-ID"):
+        aafetch.fetch_entity("12345} UNION { ?x ?y ?z")
+
+
+def test_fetch_entity_uses_p276_location_coordinates(mock_sparql: MagicMock) -> None:
+    bindings = [{k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("lat", "lon")}]
+    bindings[0]["locLat"] = {"value": "52.164647"}
+    bindings[0]["locLon"] = {"value": "4.4655"}
+    mock_sparql.return_value = _mock_response(bindings)
+    result = aafetch.fetch_entity("2619632")
+    assert result["coordinates"] == {"lat": 52.164647, "lon": 4.4655}
 
 
 def test_fetch_entity_uses_wkt_coordinate_fallback(mock_sparql: MagicMock) -> None:
@@ -193,6 +213,128 @@ def test_seed_yaml_dry_run_does_not_write(
         assert not os.path.isfile(out)
     captured = capsys.readouterr()
     assert "Q170918" in captured.out
+
+
+def test_geocode_nominatim_returns_coordinates() -> None:
+    mock_resp = [{"lat": "52.164647", "lon": "4.4655"}]
+    with patch("urllib.request.urlopen") as mock_urlopen:
+        mock_cm = MagicMock()
+        mock_cm.__enter__ = MagicMock(return_value=mock_cm)
+        mock_cm.__exit__ = MagicMock(return_value=False)
+        mock_cm.read.return_value = json.dumps(mock_resp).encode()
+        mock_urlopen.return_value = mock_cm
+        result = aafetch.geocode_nominatim("Archimedesweg 1, 2333 CM Leiden")
+    assert result == {"lat": 52.164647, "lon": 4.4655}
+
+
+def test_geocode_nominatim_returns_none_on_empty_results() -> None:
+    with patch("urllib.request.urlopen") as mock_urlopen:
+        mock_cm = MagicMock()
+        mock_cm.__enter__ = MagicMock(return_value=mock_cm)
+        mock_cm.__exit__ = MagicMock(return_value=False)
+        mock_cm.read.return_value = b"[]"
+        mock_urlopen.return_value = mock_cm
+        result = aafetch.geocode_nominatim("Unknown place XYZ")
+    assert result is None
+
+
+def test_geocode_nominatim_returns_none_on_network_error() -> None:
+    import urllib.error
+    with patch("urllib.request.urlopen", side_effect=urllib.error.URLError("timeout")):
+        result = aafetch.geocode_nominatim("Somewhere")
+    assert result is None
+
+
+def test_seed_yaml_falls_back_to_nominatim_when_no_coordinates(
+    mock_sparql: MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    bindings = [{k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("lat", "lon")}]
+    mock_sparql.return_value = _mock_response(bindings)
+    with patch("aafetch.geocode_nominatim", return_value={"lat": 51.5, "lon": -0.1}):
+        with patch("aafetch.time") as mock_time:
+            mock_time.sleep = MagicMock()
+            with tempfile.TemporaryDirectory() as tmp:
+                out = os.path.join(tmp, "authority.yaml")
+                aafetch.seed_yaml("170918", out)
+                with open(out, encoding="utf-8") as f:
+                    doc = yaml.safe_load(f)
+    assert doc["authorities"][0]["coordinates"] == {"lat": 51.5, "lon": -0.1}
+
+
+def test_seed_yaml_warns_when_coordinates_from_p276(
+    mock_sparql: MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    bindings = [{k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("lat", "lon")}]
+    bindings[0]["locLat"] = {"value": "52.164647"}
+    bindings[0]["locLon"] = {"value": "4.4655"}
+    mock_sparql.return_value = _mock_response(bindings)
+    with tempfile.TemporaryDirectory() as tmp:
+        out = os.path.join(tmp, "authority.yaml")
+        aafetch.seed_yaml("170918", out)
+    captured = capsys.readouterr()
+    assert "P276" in captured.out
+    assert "WARNING" in captured.out
+
+
+def test_seed_yaml_notes_when_coordinates_from_wkt(
+    mock_sparql: MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    bindings = [{k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("lat", "lon")}]
+    bindings[0]["coords"] = {"value": "Point(-75.6972 45.4215)"}
+    mock_sparql.return_value = _mock_response(bindings)
+    with tempfile.TemporaryDirectory() as tmp:
+        out = os.path.join(tmp, "authority.yaml")
+        aafetch.seed_yaml("170918", out)
+    captured = capsys.readouterr()
+    assert "WKT" in captured.out
+    assert "NOTE" in captured.out
+
+
+def test_seed_yaml_nominatim_uses_headquarters_address(
+    mock_sparql: MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    bindings = [{k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("lat", "lon")}]
+    mock_sparql.return_value = _mock_response(bindings)
+    with tempfile.TemporaryDirectory() as tmp:
+        out = os.path.join(tmp, "authority.yaml")
+        existing = {
+            "authorities": [
+                {
+                    "headquarters_address": "Archimedesweg 1, 2333 CM Leiden",
+                    "wikidata_id": "Q170918",
+                }
+            ]
+        }
+        with open(out, "w", encoding="utf-8") as f:
+            yaml.dump(existing, f)
+        with patch("aafetch.geocode_nominatim", return_value={"lat": 52.164647, "lon": 4.4655}):
+            with patch("aafetch.time") as mock_time:
+                mock_time.sleep = MagicMock()
+                aafetch.seed_yaml("170918", out)
+    captured = capsys.readouterr()
+    assert "address" in captured.out
+    assert "name+country" not in captured.out
+
+
+def test_seed_yaml_nominatim_no_results_prints_message(
+    mock_sparql: MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    bindings = [{k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("lat", "lon")}]
+    mock_sparql.return_value = _mock_response(bindings)
+    with patch("aafetch.geocode_nominatim", return_value=None):
+        with patch("aafetch.time") as mock_time:
+            mock_time.sleep = MagicMock()
+            with tempfile.TemporaryDirectory() as tmp:
+                out = os.path.join(tmp, "authority.yaml")
+                aafetch.seed_yaml("170918", out)
+    captured = capsys.readouterr()
+    assert "no results" in captured.out
+
+
+def test_wikidata_to_authority_skips_curated_field_without_force() -> None:
+    data = {**_wikidata_data(), "remit": "Wikidata remit."}
+    result = aafetch.wikidata_to_authority("170918", data)
+    assert result.get("remit") is None
 
 
 def test_seed_yaml_creates_parent_dirs(mock_sparql: MagicMock) -> None:

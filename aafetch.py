@@ -15,6 +15,8 @@ import argparse
 import json
 import re
 import sys
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -24,6 +26,8 @@ import yaml
 
 SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
 WIKIDATA_ENTITY_BASE = "https://www.wikidata.org/entity/"
+NOMINATIM_ENDPOINT = "https://nominatim.openstreetmap.org/search"
+_USER_AGENT = "AuthorityAtlas/1.0 (https://github.com/erngui/authorityatlas)"
 
 _CURATED_FIELDS = frozenset(
     {
@@ -45,8 +49,53 @@ _CURATED_FIELDS = frozenset(
 
 _WIKI_LANGS = ("en", "de", "fr", "it", "es", "nl", "pt", "zh", "ja", "ar", "ru")
 
+# ---------------------------------------------------------------------------
+# Wikidata properties used in the SPARQL query below.
+# Each property has a canonical page at https://www.wikidata.org/wiki/Property:PXXX
+#
+# Property  Human name                  SPARQL variable(s)
+# --------  --------------------------  ----------------------------------
+# P1448     official name               ?officialName
+# P571      inception (founding date)   ?inception
+# P856      official website URL        ?website
+# P625      coordinate location         ?lat / ?lon  (and ?coords as backup)
+#
+#             Wikidata stores P625 as a WKT (Well-Known Text) geometry
+#             string, e.g. "Point(-0.076 51.509)".  WKT is an OGC/ISO
+#             standard text format for geometric shapes — here just a
+#             single longitude-latitude point (note: WKT order is lon,lat,
+#             opposite from the conventional lat,lon).
+#
+#             The SPARQL GeoSPARQL extension provides geof:latitude() /
+#             geof:longitude() to unpack that string into plain numbers,
+#             which is what ?lat/?lon capture.  ?coords selects the raw
+#             WKT string as a fallback in case the endpoint does not
+#             support GeoSPARQL (rare but possible on mirrors/forks).
+#             _parse_coordinates() tries ?lat/?lon first, then ?coords.
+#
+# P276      location (linked item)      — (intermediate join variable)
+#   ↳ P625  coordinates of that item    ?locLat / ?locLon
+#
+#             Many authorities lack P625 on the entity itself; instead a
+#             linked building or campus item (P276) carries the coordinates.
+#             Real example: Rijnland (Q2619632) has P276 → office building
+#             Q125679468, which has P625 → lat 52.164647, lon 4.4655.
+#             aafetch calls this the "P276→P625" fallback and warns when it
+#             is used, because the coordinates belong to the building, not
+#             the authority — a human should verify them.
+#
+# P17       country (item)              → P297 → ?countryCode
+# P297      ISO 3166-1 alpha-2 code     ?countryCode
+# P131      located in admin. territory ?adminTerritory (English label)
+# P31       instance of (entity type)   ?instanceOf (English label)
+# P18       image (Commons file URL)    ?image
+#
+# Wikipedia sitelinks are fetched via schema:isPartOf per language (see
+# _build_sparql_query).  They are not Wikidata properties but graph links.
+# ---------------------------------------------------------------------------
+
 _SPARQL_TEMPLATE = """\
-SELECT ?officialName ?inception ?website ?lat ?lon
+SELECT ?officialName ?inception ?website ?coords ?lat ?lon ?locLat ?locLon
        ?countryCode ?adminTerritory ?instanceOf ?image
        {wiki_selects}
 WHERE {{
@@ -61,6 +110,12 @@ WHERE {{
     ?entity wdt:P625 ?coords .
     BIND(geof:latitude(?coords) AS ?lat)
     BIND(geof:longitude(?coords) AS ?lon)
+  }}
+  OPTIONAL {{
+    ?entity wdt:P276 ?locationItem .
+    ?locationItem wdt:P625 ?locCoords .
+    BIND(geof:latitude(?locCoords) AS ?locLat)
+    BIND(geof:longitude(?locCoords) AS ?locLon)
   }}
   OPTIONAL {{
     ?entity wdt:P17 ?countryItem .
@@ -83,6 +138,20 @@ LIMIT 1
 """
 
 
+def _normalize_qid(raw: str) -> str:
+    """Strip leading Q/q and validate the remainder is all digits.
+
+    Raises ValueError if the input is not a valid Wikidata Q-number.
+    """
+    digits = raw.lstrip("Qq")
+    if not digits.isdigit():
+        raise ValueError(
+            f"Invalid Wikidata Q-ID: '{raw}'. "
+            "Expected a positive integer (e.g. 170918 or Q170918)."
+        )
+    return digits
+
+
 def _build_sparql_query(qid: str) -> str:
     selects = " ".join(f"?{lang}wiki" for lang in _WIKI_LANGS)
     optionals = "\n  ".join(
@@ -101,32 +170,69 @@ def sparql_query(query: str) -> dict[str, Any]:
         url,
         headers={
             "Accept": "application/sparql-results+json",
-            "User-Agent": "AuthorityAtlas/1.0 (https://github.com/erngui/authorityatlas)",
+            "User-Agent": _USER_AGENT,
         },
     )
-    with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310
+    with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310  # nosec B310
         return dict(json.loads(resp.read().decode("utf-8")))
 
 
-def _parse_coordinates(row: dict[str, Any]) -> dict[str, float] | None:
+def geocode_nominatim(query: str) -> dict[str, float] | None:
+    """Geocode a free-text address query using OSM Nominatim.
+
+    Returns {"lat": ..., "lon": ...} on success, None on failure or no results.
+    Nominatim policy requires max 1 req/s; callers must respect this.
+    """
+    params = urllib.parse.urlencode({"q": query, "format": "json", "limit": "1"})
+    url = f"{NOMINATIM_ENDPOINT}?{params}"
+    req = urllib.request.Request(url, headers={"User-Agent": _USER_AGENT})  # noqa: S310
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:  # noqa: S310  # nosec B310
+            results: list[dict[str, Any]] = json.loads(resp.read().decode("utf-8"))
+            if results:
+                return {"lat": float(results[0]["lat"]), "lon": float(results[0]["lon"])}
+    except (urllib.error.URLError, ValueError, KeyError, IndexError):
+        pass
+    return None
+
+
+def _parse_coordinates(row: dict[str, Any]) -> tuple[dict[str, float] | None, str]:
     """Extract lat/lon from a SPARQL result row.
 
-    Tries geof:latitude/longitude bindings first; falls back to parsing a
-    WKT Point string (e.g. 'Point(-0.1278 51.5074)') from a ?coords binding.
+    Returns (coords_or_None, source_label).  source_label is one of:
+    "P625"      – direct coordinate location on the entity (best)
+    "P276→P625" – coordinates on the P276-linked location item (see property
+                  table above; warn caller to verify against headquarters)
+    "WKT"       – parsed from the raw WKT Point string in ?coords (rare)
+    "none"      – no coordinates found in Wikidata (caller may try Nominatim)
     """
     if "lat" in row and "lon" in row:
         try:
-            return {"lat": float(row["lat"]["value"]), "lon": float(row["lon"]["value"])}
+            return (
+                {"lat": float(row["lat"]["value"]), "lon": float(row["lon"]["value"])},
+                "P625",
+            )
+        except (KeyError, ValueError):
+            pass
+    if "locLat" in row and "locLon" in row:
+        try:
+            return (
+                {"lat": float(row["locLat"]["value"]), "lon": float(row["locLon"]["value"])},
+                "P276→P625",
+            )
         except (KeyError, ValueError):
             pass
     if "coords" in row:
         m = re.match(r"Point\(([^ ]+) ([^ ]+)\)", row["coords"]["value"])
         if m:
             try:
-                return {"lat": float(m.group(2)), "lon": float(m.group(1))}
+                return (
+                    {"lat": float(m.group(2)), "lon": float(m.group(1))},
+                    "WKT",
+                )
             except ValueError:
                 pass
-    return None
+    return None, "none"
 
 
 def _parse_year(row: dict[str, Any]) -> int | None:
@@ -141,6 +247,7 @@ def _parse_year(row: dict[str, Any]) -> int | None:
 
 def fetch_entity(qid: str) -> dict[str, Any]:
     """Query Wikidata for one entity and return a normalised dict."""
+    qid = _normalize_qid(qid)
     query = _build_sparql_query(qid)
     raw = sparql_query(query)
     bindings: list[dict[str, Any]] = raw.get("results", {}).get("bindings", [])
@@ -154,6 +261,7 @@ def fetch_entity(qid: str) -> dict[str, Any]:
         if key in row:
             multilang[lang] = row[key]["value"]
 
+    coords, coord_source = _parse_coordinates(row)
     return {
         "wikidata_id": f"Q{qid}",
         "name": row.get("officialName", {}).get("value", ""),
@@ -164,7 +272,8 @@ def fetch_entity(qid: str) -> dict[str, Any]:
         "establishment_country": row.get("countryCode", {}).get("value", ""),
         "type": row.get("instanceOf", {}).get("value", ""),
         "image": row.get("image", {}).get("value", ""),
-        "coordinates": _parse_coordinates(row),
+        "coordinates": coords,
+        "_coordinate_source": coord_source,
     }
 
 
@@ -200,6 +309,7 @@ def seed_yaml(
 ) -> None:
     """Fetch Wikidata entity Q{qid} and write (or update) output_path YAML."""
     wikidata_data = fetch_entity(qid)
+    coord_source: str = wikidata_data.pop("_coordinate_source", "none")
 
     path = Path(output_path)
     existing_authority: dict[str, Any] | None = None
@@ -213,6 +323,47 @@ def seed_yaml(
             existing_authority = authorities[0]
 
     merged = wikidata_to_authority(qid, wikidata_data, existing_authority, force_wikidata)
+
+    if merged.get("coordinates"):
+        coords = merged["coordinates"]
+        print(
+            f"  Coordinates [{coord_source}]: "
+            f"lat={coords['lat']}, lon={coords['lon']}"
+        )
+        if coord_source == "P276→P625":
+            print(
+                "  WARNING: coordinates are from a linked location item (P276), "
+                "not the entity itself — verify they match the headquarters."
+            )
+        elif coord_source == "WKT":
+            print(
+                "  NOTE: coordinates parsed from WKT Point string "
+                "— less reliable than P625 literal."
+            )
+    else:
+        address = merged.get("headquarters_address", "")
+        if address:
+            nominatim_query = address
+            nominatim_label = f"address: {address!r}"
+        else:
+            nominatim_query = (
+                f"{merged.get('name', '')} {merged.get('establishment_country', '')}".strip()
+            )
+            nominatim_label = f"name+country: {nominatim_query!r}"
+        if nominatim_query:
+            print(f"  No coordinates from Wikidata — trying Nominatim ({nominatim_label})")
+            if not address:
+                print(
+                    "  WARNING: Nominatim query is name+country only — result may be "
+                    "an approximate city/country centroid, not the actual headquarters."
+                )
+            time.sleep(1)  # Nominatim policy: max 1 req/s
+            coords = geocode_nominatim(nominatim_query)
+            if coords:
+                merged["coordinates"] = coords
+                print(f"  Geocoded [Nominatim]: lat={coords['lat']}, lon={coords['lon']}")
+            else:
+                print("  Nominatim returned no results — coordinates left empty")
 
     if dry_run:
         print(yaml.dump({"authorities": [merged]}, allow_unicode=True, sort_keys=False, indent=2))
