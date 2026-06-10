@@ -190,6 +190,7 @@ def generate_site(
             articles.append(
                 {
                     "name": authority["name"],
+                    "shortname": authority.get("shortname", ""),
                     "display_name": authority["display_name"],
                     "acronym": authority.get("acronym", ""),
                     "remit": authority.get("remit", ""),

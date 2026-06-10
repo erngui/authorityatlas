@@ -551,7 +551,7 @@
         div.innerHTML = `
           <div class="entry-header">
             <h2>
-              <a href="${entry.filename}">${entry.name}</a>
+              <a href="${entry.filename}"${entry.shortname ? ` title="${entry.name}"` : ''}>${entry.shortname || entry.name}</a>
               ${entry.acronym ? `<span class="acronym">${entry.acronym}</span>` : ''}
             </h2>
           </div>
