@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AuthorityAtlas - Regulatory Authorities Working for the Common Good</title>
   <meta name="description" content="An open-source directory of regulatory authorities, government agencies, and standards bodies working for the common good around the world.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <!-- leaflet.markercluster 1.5.3 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin=""/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin=""></script>
   <style>
     * {
       box-sizing: border-box;
@@ -296,6 +302,30 @@
       text-decoration: underline;
     }
     
+    .view-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .toggle-btn {
+      padding: 0.5rem 1.5rem;
+      border: 2px solid #0645AD;
+      border-radius: 4px;
+      background: white;
+      color: #0645AD;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s;
+    }
+    .toggle-btn.active {
+      background: #0645AD;
+      color: white;
+    }
+    #map-container {
+      margin-bottom: 1rem;
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 1rem;
@@ -359,6 +389,16 @@
     </div>
   </div>
 
+  <div class="view-toggle" id="viewToggle">
+    <button class="toggle-btn active" id="btnGrid" onclick="setView('grid')">Grid</button>
+    <button class="toggle-btn" id="btnMap" onclick="setView('map')">Map</button>
+  </div>
+
+  <div id="map-container" style="display:none;">
+    <div id="map" style="height:500px;border-radius:8px;"></div>
+    <p id="map-stats" style="font-size:0.85rem;color:#7f8c8d;margin-top:0.4rem;"></p>
+  </div>
+
   <div class="stats" id="stats"></div>
   <div id="results"></div>
 
@@ -378,6 +418,71 @@
     const typeFilter = document.getElementById('typeFilter');
     const sortFilter = document.getElementById('sortFilter');
     const statsDiv = document.getElementById('stats');
+
+    // Map state
+    let currentView = 'grid';
+    let leafletMap = null;
+    let markerCluster = null;
+
+    function setView(view) {
+      currentView = view;
+      document.getElementById('btnGrid').classList.toggle('active', view === 'grid');
+      document.getElementById('btnMap').classList.toggle('active', view === 'map');
+      resultsContainer.style.display = view === 'grid' ? 'grid' : 'none';
+      document.getElementById('map-container').style.display = view === 'map' ? 'block' : 'none';
+      if (view === 'map') {
+        initMap();
+        leafletMap.invalidateSize();  // re-measure after container becomes visible
+        filterAndSort();
+      }
+    }
+
+    function initMap() {
+      if (leafletMap !== null) return;
+      leafletMap = L.map('map').setView([20, 0], 2);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(leafletMap);
+      // fall back to plain layerGroup if MarkerCluster CDN failed to load
+      markerCluster = typeof L.markerClusterGroup === 'function'
+        ? L.markerClusterGroup()
+        : L.layerGroup();
+      leafletMap.addLayer(markerCluster);
+    }
+
+    function renderMap(filtered) {
+      if (currentView !== 'map' || leafletMap === null) return;
+      markerCluster.clearLayers();
+      const bounds = [];
+      filtered.forEach(entry => {
+        if (!entry.coordinates) return;
+        const { lat, lon } = entry.coordinates;
+        const popup = `
+          <div style="min-width:200px">
+            <strong><a href="${entry.filename}">${entry.name}</a></strong><br/>
+            ${entry.acronym ? `<em>${entry.acronym}</em><br/>` : ''}
+            ${entry.headquarters_address
+              ? `📍 ${entry.headquarters_address}<br/>`
+              : entry.headquarters_city
+                ? `📍 ${entry.headquarters_city}, ${entry.headquarters_country_name}<br/>`
+                : ''}
+            <small>${entry.type || ''}</small>
+          </div>`;
+        markerCluster.addLayer(L.marker([lat, lon]).bindPopup(popup));
+        bounds.push([lat, lon]);
+      });
+      if (bounds.length > 0) {
+        leafletMap.fitBounds(bounds, { padding: [40, 40] });
+      }
+      const withCoords = filtered.filter(e => e.coordinates).length;
+      const mapStats = document.getElementById('map-stats');
+      if (mapStats) {
+        mapStats.textContent = withCoords < filtered.length
+          ? `Showing ${withCoords} of ${filtered.length} filtered authorities on map (${filtered.length - withCoords} have no location data)`
+          : '';
+      }
+    }
 
     // Convert ISO country code to flag emoji
     function getFlag(countryCode) {
@@ -496,14 +601,15 @@
       const sortBy = sortFilter.value;
 
       let filtered = allArticles.filter(entry => {
-        // Text search - now includes factoid instead of description
-        const searchMatch = !query || 
+        const searchMatch = !query ||
           entry.name.toLowerCase().includes(query) ||
           (entry.acronym && entry.acronym.toLowerCase().includes(query)) ||
           (entry.remit && entry.remit.toLowerCase().includes(query)) ||
           (entry.factoid && entry.factoid.toLowerCase().includes(query)) ||
           (entry.type && entry.type.toLowerCase().includes(query)) ||
-          (entry.establishment_country && entry.establishment_country.toLowerCase().includes(query));
+          (entry.establishment_country && entry.establishment_country.toLowerCase().includes(query)) ||
+          (entry.headquarters_city && entry.headquarters_city.toLowerCase().includes(query)) ||
+          (entry.headquarters_country_name && entry.headquarters_country_name.toLowerCase().includes(query));
 
         // Country filter
         const countryMatch = !selectedCountry || entry.establishment_country_name === selectedCountry;
@@ -524,6 +630,7 @@
       }
 
       renderResults(filtered);
+      renderMap(filtered);
     }
 
     // Event listeners

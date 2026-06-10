@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trinity House - AuthorityAtlas</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -96,6 +100,23 @@
         }
         .btn-secondary:hover {
             background-color: #7f8c8d;
+        }
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+        .multilang-links {
+            margin-top: 12px;
+        }
+        .multilang-links p {
+            margin: 0 0 6px 0;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .multilang-links .links {
+            margin-top: 0;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .resources {
             list-style: none;
@@ -208,6 +229,22 @@
                 <div class="info-label">Address:</div>
                 <div class="info-value">Tower Hill, London EC3N 4DH, United Kingdom</div>
             </div>
+            
+            <div id="authority-map" style="height:280px;margin-top:1rem;border-radius:6px;"></div>
+            <script>
+              (function(){
+                var map = L.map('authority-map').setView([51.5095, -0.0762], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                  maxZoom: 19
+                }).addTo(map);
+                L.marker([51.5095, -0.0762])
+                  .addTo(map)
+                  .bindPopup('<strong>' + "Trinity House" + '</strong><br>' + "Tower Hill, London EC3N 4DH, United Kingdom")
+                  .openPopup();
+              })();
+            </script>
+            
         </div>
 
         <!-- Legal Basis -->
@@ -223,7 +260,12 @@
             <div class="links">
                 <a href="https://www.trinityhouse.co.uk/" target="_blank" class="btn">Official Website</a>
                 <a href="https://en.wikipedia.org/wiki/Trinity_House" target="_blank" class="btn btn-secondary">Wikipedia</a>
+                
+                <a href="https://www.wikidata.org/entity/Q1570725"
+                   target="_blank" class="btn btn-secondary">Wikidata</a>
+                
             </div>
+            
         </div>
 
         <!-- Tags -->

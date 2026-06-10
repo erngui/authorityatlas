@@ -319,6 +319,7 @@ def test_generate_site_includes_new_fields_in_json() -> None:
         assert a["coordinates"] == {"lat": 51.5074, "lon": -0.1278}
         assert a["headquarters_city"] == "London"
         assert "headquarters_country_name" in a
+        assert "headquarters_address" in a
     finally:
         shutil.rmtree(tmp)
 

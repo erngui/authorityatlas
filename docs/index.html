@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AuthorityAtlas - Regulatory Authorities Working for the Common Good</title>
   <meta name="description" content="An open-source directory of regulatory authorities, government agencies, and standards bodies working for the common good around the world.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <!-- leaflet.markercluster 1.5.3 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin=""/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin=""></script>
   <style>
     * {
       box-sizing: border-box;
@@ -296,6 +302,30 @@
       text-decoration: underline;
     }
     
+    .view-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .toggle-btn {
+      padding: 0.5rem 1.5rem;
+      border: 2px solid #0645AD;
+      border-radius: 4px;
+      background: white;
+      color: #0645AD;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s;
+    }
+    .toggle-btn.active {
+      background: #0645AD;
+      color: white;
+    }
+    #map-container {
+      margin-bottom: 1rem;
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 1rem;
@@ -359,6 +389,16 @@
     </div>
   </div>
 
+  <div class="view-toggle" id="viewToggle">
+    <button class="toggle-btn active" id="btnGrid" onclick="setView('grid')">Grid</button>
+    <button class="toggle-btn" id="btnMap" onclick="setView('map')">Map</button>
+  </div>
+
+  <div id="map-container" style="display:none;">
+    <div id="map" style="height:500px;border-radius:8px;"></div>
+    <p id="map-stats" style="font-size:0.85rem;color:#7f8c8d;margin-top:0.4rem;"></p>
+  </div>
+
   <div class="stats" id="stats"></div>
   <div id="results"></div>
 
@@ -371,13 +411,78 @@
   </footer>
 
   <script>
-    const allArticles = [{"acronym": "HHR", "establishment_country": "NL", "establishment_country_name": "Netherlands", "factoid": "The oldest water authority in the Netherlands. Mission statement: Dry feet and clean water.", "filename": "hoogheemraadschap_van_rijnland.html", "name": "Hoogheemraadschap van Rijnland", "remit": "Rijnland Regional Water Authority. Manages water levels, flood protection, and water quality in the region between roughly Velsen and Gouda, ensuring clean water and protection from flooding.", "type": "Regional water authority (Waterschap)", "website": "https://www.rijnland.net/", "wikipedia": "https://en.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland", "year_established": 1248}, {"acronym": "ICAO", "establishment_country": "CA", "establishment_country_name": "Canada", "factoid": "ICAO manages over 12,000 Standards and Recommended Practices (SARPs), forming the backbone of international air navigation across 193 countries.", "filename": "international_civil_aviation_organization.html", "name": "International Civil Aviation Organization", "remit": "Develops international civil aviation Standards and Recommended Practices (SARPs) to ensure safe, secure, efficient, and environmentally responsible global air navigation.", "type": "United Nations specialized agency", "website": "https://www.icao.int/", "wikipedia": "https://en.wikipedia.org/wiki/International_Civil_Aviation_Organization", "year_established": 1944}, {"acronym": "TH", "establishment_country": "GB", "establishment_country_name": "United Kingdom", "factoid": "Trinity House was \u003ca href=\"https://www.trinityhouse.co.uk/about-us/history-of-trinity-house/th500\" target=\"_blank\"\u003eestablished by Royal Charter in 1514\u003c/a\u003e after Thames mariners petitioned the king in 1513 for powers to regulate dangerous unqualified pilots. It represents one of the world\u0027s oldest continuously operating maritime safety organizations, predating most modern regulatory concepts.", "filename": "trinity_house.html", "name": "Trinity House", "remit": "General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar, responsible for maritime navigation aids including lighthouses, buoys, and beacons.", "type": "Executive non-departmental public body", "website": "https://www.trinityhouse.co.uk/", "wikipedia": "https://en.wikipedia.org/wiki/Trinity_House", "year_established": 1514}];
+    const allArticles = [{"acronym": "HHR", "coordinates": {"lat": 52.164647, "lon": 4.4655}, "establishment_country": "NL", "establishment_country_name": "Netherlands", "factoid": "The oldest water authority in the Netherlands. Mission statement: Dry feet and clean water.", "filename": "hoogheemraadschap_van_rijnland.html", "headquarters_address": "Archimedesweg 1, 2333 CM Leiden, Netherlands", "headquarters_city": "Leiden", "headquarters_country_name": "Netherlands", "name": "Hoogheemraadschap van Rijnland", "remit": "Rijnland Regional Water Authority. Manages water levels, flood protection, and water quality in the region between roughly Velsen and Gouda, ensuring clean water and protection from flooding.", "type": "Regional water authority (Waterschap)", "website": "https://www.rijnland.net/", "wikidata_id": "Q2619632", "wikipedia": "https://en.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland", "year_established": 1248}, {"acronym": "ICAO", "coordinates": {"lat": 45.4986, "lon": -73.568}, "establishment_country": "CA", "establishment_country_name": "Canada", "factoid": "ICAO manages over 12,000 Standards and Recommended Practices (SARPs), forming the backbone of international air navigation across 193 countries.", "filename": "international_civil_aviation_organization.html", "headquarters_address": "999 Robert-Bourassa Boulevard, Montr\u00e9al, Quebec H3C 5H7, Canada", "headquarters_city": "Montreal", "headquarters_country_name": "Canada", "name": "International Civil Aviation Organization", "remit": "Develops international civil aviation Standards and Recommended Practices (SARPs) to ensure safe, secure, efficient, and environmentally responsible global air navigation.", "type": "United Nations specialized agency", "website": "https://www.icao.int/", "wikidata_id": "Q125761", "wikipedia": "https://en.wikipedia.org/wiki/International_Civil_Aviation_Organization", "year_established": 1944}, {"acronym": "TH", "coordinates": {"lat": 51.5095, "lon": -0.0762}, "establishment_country": "GB", "establishment_country_name": "United Kingdom", "factoid": "Trinity House was \u003ca href=\"https://www.trinityhouse.co.uk/about-us/history-of-trinity-house/th500\" target=\"_blank\"\u003eestablished by Royal Charter in 1514\u003c/a\u003e after Thames mariners petitioned the king in 1513 for powers to regulate dangerous unqualified pilots. It represents one of the world\u0027s oldest continuously operating maritime safety organizations, predating most modern regulatory concepts.", "filename": "trinity_house.html", "headquarters_address": "Tower Hill, London EC3N 4DH, United Kingdom", "headquarters_city": "London", "headquarters_country_name": "United Kingdom", "name": "Trinity House", "remit": "General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar, responsible for maritime navigation aids including lighthouses, buoys, and beacons.", "type": "Executive non-departmental public body", "website": "https://www.trinityhouse.co.uk/", "wikidata_id": "Q1570725", "wikipedia": "https://en.wikipedia.org/wiki/Trinity_House", "year_established": 1514}];
     const resultsContainer = document.getElementById('results');
     const searchInput = document.getElementById('searchInput');
     const countryFilter = document.getElementById('countryFilter');
     const typeFilter = document.getElementById('typeFilter');
     const sortFilter = document.getElementById('sortFilter');
     const statsDiv = document.getElementById('stats');
+
+    // Map state
+    let currentView = 'grid';
+    let leafletMap = null;
+    let markerCluster = null;
+
+    function setView(view) {
+      currentView = view;
+      document.getElementById('btnGrid').classList.toggle('active', view === 'grid');
+      document.getElementById('btnMap').classList.toggle('active', view === 'map');
+      resultsContainer.style.display = view === 'grid' ? 'grid' : 'none';
+      document.getElementById('map-container').style.display = view === 'map' ? 'block' : 'none';
+      if (view === 'map') {
+        initMap();
+        leafletMap.invalidateSize();  // re-measure after container becomes visible
+        filterAndSort();
+      }
+    }
+
+    function initMap() {
+      if (leafletMap !== null) return;
+      leafletMap = L.map('map').setView([20, 0], 2);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(leafletMap);
+      // fall back to plain layerGroup if MarkerCluster CDN failed to load
+      markerCluster = typeof L.markerClusterGroup === 'function'
+        ? L.markerClusterGroup()
+        : L.layerGroup();
+      leafletMap.addLayer(markerCluster);
+    }
+
+    function renderMap(filtered) {
+      if (currentView !== 'map' || leafletMap === null) return;
+      markerCluster.clearLayers();
+      const bounds = [];
+      filtered.forEach(entry => {
+        if (!entry.coordinates) return;
+        const { lat, lon } = entry.coordinates;
+        const popup = `
+          <div style="min-width:200px">
+            <strong><a href="${entry.filename}">${entry.name}</a></strong><br/>
+            ${entry.acronym ? `<em>${entry.acronym}</em><br/>` : ''}
+            ${entry.headquarters_address
+              ? `📍 ${entry.headquarters_address}<br/>`
+              : entry.headquarters_city
+                ? `📍 ${entry.headquarters_city}, ${entry.headquarters_country_name}<br/>`
+                : ''}
+            <small>${entry.type || ''}</small>
+          </div>`;
+        markerCluster.addLayer(L.marker([lat, lon]).bindPopup(popup));
+        bounds.push([lat, lon]);
+      });
+      if (bounds.length > 0) {
+        leafletMap.fitBounds(bounds, { padding: [40, 40] });
+      }
+      const withCoords = filtered.filter(e => e.coordinates).length;
+      const mapStats = document.getElementById('map-stats');
+      if (mapStats) {
+        mapStats.textContent = withCoords < filtered.length
+          ? `Showing ${withCoords} of ${filtered.length} filtered authorities on map (${filtered.length - withCoords} have no location data)`
+          : '';
+      }
+    }
 
     // Convert ISO country code to flag emoji
     function getFlag(countryCode) {
@@ -496,14 +601,15 @@
       const sortBy = sortFilter.value;
 
       let filtered = allArticles.filter(entry => {
-        // Text search - now includes factoid instead of description
-        const searchMatch = !query || 
+        const searchMatch = !query ||
           entry.name.toLowerCase().includes(query) ||
           (entry.acronym && entry.acronym.toLowerCase().includes(query)) ||
           (entry.remit && entry.remit.toLowerCase().includes(query)) ||
           (entry.factoid && entry.factoid.toLowerCase().includes(query)) ||
           (entry.type && entry.type.toLowerCase().includes(query)) ||
-          (entry.establishment_country && entry.establishment_country.toLowerCase().includes(query));
+          (entry.establishment_country && entry.establishment_country.toLowerCase().includes(query)) ||
+          (entry.headquarters_city && entry.headquarters_city.toLowerCase().includes(query)) ||
+          (entry.headquarters_country_name && entry.headquarters_country_name.toLowerCase().includes(query));
 
         // Country filter
         const countryMatch = !selectedCountry || entry.establishment_country_name === selectedCountry;
@@ -524,6 +630,7 @@
       }
 
       renderResults(filtered);
+      renderMap(filtered);
     }
 
     // Event listeners

@@ -204,6 +204,7 @@ def generate_site(
                     "headquarters_country_name": authority.get(
                         "headquarters_country_name", ""
                     ),
+                    "headquarters_address": authority.get("headquarters_address", ""),
                 }
             )
             metadata_list.append(
