@@ -26,6 +26,12 @@
             margin: 0 0 10px 0;
             color: #2c3e50;
         }
+        .full-name {
+            color: #555;
+            font-size: 1em;
+            font-style: italic;
+            margin: 2px 0 0;
+        }
         .acronym {
             color: #7f8c8d;
             font-size: 1.2em;
@@ -178,7 +184,12 @@
         {% if authority.image is defined and authority.image %}
         <img src="{{ authority.image }}" alt="{{ authority.name }} logo" class="logo">
         {% endif %}
+        {% if authority.shortname is defined and authority.shortname %}
+        <h1>{{ authority.shortname }}</h1>
+        <p class="full-name">{{ authority.name }}</p>
+        {% else %}
         <h1>{{ authority.name }}</h1>
+        {% endif %}
         <p class="acronym">{{ authority.acronym }}</p>
     </header>
 
