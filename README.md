@@ -24,13 +24,32 @@ To add a new authority to the Atlas:
 
 1. **Check if a Wikipedia page exists** - If not, please create one first (with proper sources). This ensures the authority is notable and well-documented.
 
-2. **Create a YAML file** under the `data/articles/` directory, using **Trinity House as your blueprint**. The Trinity House YAML (`data/articles/trinity_house.yaml`) serves as the reference template for all authorities and includes comprehensive documentation of all fields.
+2. **Seed from Wikidata (recommended)** - If the authority has a [Wikidata](https://www.wikidata.org) entry, use `aafetch.py` to pre-populate most fields automatically:
 
-3. **Some guidelines:**
-   - Keep `factoid` to 1-3 sentences focused on sense of wonder or origin story.
-   - Include full official address for mapping functionality
-   - Only add `additional_resources` if they provide unique perspectives beyond the official website and Wikipedia
-   
+   ```bash
+   # Preview what would be written (no files changed):
+   python aafetch.py --qid Q170918 --dry-run
+
+   # Write the seeded YAML:
+   python aafetch.py --qid Q170918 --output data/articles/icao.yaml
+   ```
+
+   `aafetch.py` fetches name, year, website, Wikipedia links, coordinates, and more from Wikidata and writes a ready-to-edit YAML. Human-curated fields (`factoid`, `remit`, `legal_basis_*`, `tags`, etc.) are never overwritten — you fill those in manually.
+
+   **Pay attention to the coordinate diagnostics printed during the run:**
+   - `Coordinates [P625]` — coordinates come directly from the authority's Wikidata entry. Good.
+   - `Coordinates [P276→P625]` + **WARNING** — coordinates come from a linked building/location item, not the authority itself. Verify they match the actual headquarters before committing.
+   - `Nominatim (name+country)` + **WARNING** — no Wikidata coordinates found; Nominatim was given only the authority name and country, which may return a city centroid rather than the real address. Replace with precise coordinates if possible.
+
+   If the authority is not in Wikidata, skip to step 3 and create the YAML by hand using Trinity House as your blueprint.
+
+3. **Review and complete the YAML** under `data/articles/`. Use **Trinity House** (`data/articles/trinity_house.yaml`) as your reference template — it documents every field. Fill in at minimum:
+   - `factoid` — 1-3 sentences on origin story or sense of wonder
+   - `remit` — what the authority actually does
+   - `legal_basis_name` / `legal_basis_link` — founding legislation
+   - `tags` — for search and filtering
+   - `headquarters_address` — full address, needed for accurate map placement
+
 4. **Commit your changes** and submit a **Pull Request** with a clear, descriptive message.
 
 ## 🚀 Getting Started with Development
@@ -113,7 +132,9 @@ Under these terms:
 
 ## 🙌 Acknowledgments
 
-- Wikipedia for providing the comprehensive knowledge base we link to
+- [Wikidata](https://www.wikidata.org) for structured authority data (coordinates, founding dates, official names, multilingual Wikipedia links) used to seed YAML entries via `aafetch.py`
+- [Wikipedia](https://www.wikipedia.org) for the comprehensive knowledge base we link to
+- [OpenStreetMap](https://www.openstreetmap.org) / [Nominatim](https://nominatim.org) for geocoding fallback when Wikidata has no coordinates
 - Grace's Guide and other specialized resources for domain-specific insights
 - The open-source community
 
