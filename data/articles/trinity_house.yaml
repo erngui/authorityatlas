@@ -32,6 +32,12 @@ authorities:
   # Organizational evolution
   predecessor_organizations: "Guild of Mariners of Deptford Strand (informal mariners' association, pre-1514)"
   
+  # Wikidata
+  wikidata_id: "Q1570725"
+  coordinates:
+    lat: 51.5095
+    lon: -0.0762
+
   # Links to authoritative sources
   website: "https://www.trinityhouse.co.uk/"
   wikipedia: "https://en.wikipedia.org/wiki/Trinity_House"

@@ -22,6 +22,12 @@ authorities:
   # Organizational evolution
   predecessor_organizations: "International Commission for Air Navigation (ICAN)"
   
+  # Wikidata
+  wikidata_id: "Q125761"
+  coordinates:
+    lat: 45.4986
+    lon: -73.5680
+
   # Links to authoritative sources
   website: "https://www.icao.int/"
   wikipedia: "https://en.wikipedia.org/wiki/International_Civil_Aviation_Organization"

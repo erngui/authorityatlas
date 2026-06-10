@@ -32,6 +32,12 @@ authorities:
   # Organizational evolution
   predecessor_organizations: "Informal cooperating water boards along the Oude Rijn (Old Rhine) river (pre-1248)"
 
+  # Wikidata
+  wikidata_id: "Q2619632"
+  coordinates:
+    lat: 52.164647
+    lon: 4.4655
+
   # Links to authoritative sources
   website: "https://www.rijnland.net/"
   wikipedia: "https://en.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland"
