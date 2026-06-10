@@ -33,6 +33,7 @@ _CURATED_FIELDS = frozenset(
     {
         "remit",
         "factoid",
+        "shortname",
         "legal_basis_name",
         "legal_basis_link",
         "regional_remit",

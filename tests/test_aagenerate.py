@@ -261,6 +261,19 @@ def test_validate_raises_when_coordinates_lat_not_number() -> None:
         validate_authority(authority, "test.yaml")
 
 
+def test_validate_accepts_shortname_as_string() -> None:
+    authority = _valid()
+    authority["shortname"] = "Trinity House"
+    validate_authority(authority, "test.yaml")  # must not raise
+
+
+def test_validate_raises_when_shortname_not_string() -> None:
+    authority = _valid()
+    authority["shortname"] = 42
+    with pytest.raises(TypeError, match="'shortname' should be a string"):
+        validate_authority(authority, "test.yaml")
+
+
 def test_validate_accepts_wikipedia_multilang_dict() -> None:
     authority = _valid()
     authority["wikipedia_multilang"] = {"fr": "http://fr.wikipedia.org/wiki/Test"}
@@ -294,7 +307,7 @@ def test_generate_site_produces_html_files() -> None:
         count = generate_site(FIXTURES_DIR, out, index_tmpl, article_tmpl)
         assert count == 1
         assert os.path.isfile(os.path.join(out, "index.html"))
-        article_path = os.path.join(out, "test_maritime_authority.html")
+        article_path = os.path.join(out, "sample_authorities.html")
         assert os.path.isfile(article_path)
         with open(article_path, encoding="utf-8") as f:
             assert "Test Maritime Authority" in f.read()
@@ -320,6 +333,7 @@ def test_generate_site_includes_new_fields_in_json() -> None:
         assert a["headquarters_city"] == "London"
         assert "headquarters_country_name" in a
         assert "headquarters_address" in a
+        assert "display_name" in a
     finally:
         shutil.rmtree(tmp)
 

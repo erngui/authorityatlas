@@ -162,6 +162,13 @@
             margin: 0;
         }
         
+        .logo {
+            max-width: 200px;
+            max-height: 100px;
+            float: right;
+            margin-left: 20px;
+        }
+        
     </style>
 </head>
 <body>
@@ -169,7 +176,9 @@
     
     <header>
         
-        <h1>Trinity House</h1>
+        <img src="http://commons.wikimedia.org/wiki/Special:FilePath/Eastern%20City%20of%20London%20trinity%2008.03.2013%2015-56-05.jpg" alt="The Master, Wardens and Assistants of the Guild, Fraternity or Brotherhood of the most glorious and undivided Trinity and of St. Clement in the Parish of Deptford Strond, in the County of Kent logo" class="logo">
+        
+        <h1>The Master, Wardens and Assistants of the Guild, Fraternity or Brotherhood of the most glorious and undivided Trinity and of St. Clement in the Parish of Deptford Strond, in the County of Kent</h1>
         <p class="acronym">TH</p>
     </header>
 
@@ -196,7 +205,7 @@
             <h2>Core Information</h2>
             <div class="info-grid">
                 <div class="info-label">Type:</div>
-                <div class="info-value">Executive non-departmental public body</div>
+                <div class="info-value">privately held company</div>
 
                 <div class="info-label">Established:</div>
                 <div class="info-value">1514</div>
@@ -233,12 +242,12 @@
             <div id="authority-map" style="height:280px;margin-top:1rem;border-radius:6px;"></div>
             <script>
               (function(){
-                var map = L.map('authority-map').setView([51.5095, -0.0762], 13);
+                var map = L.map('authority-map').setView([51.51, -0.077], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                   maxZoom: 19
                 }).addTo(map);
-                L.marker([51.5095, -0.0762])
+                L.marker([51.51, -0.077])
                   .addTo(map)
                   .bindPopup('<strong>' + "Trinity House" + '</strong><br>' + "Tower Hill, London EC3N 4DH, United Kingdom")
                   .openPopup();
@@ -258,12 +267,49 @@
         <div class="section">
             <h2>Official Sources</h2>
             <div class="links">
-                <a href="https://www.trinityhouse.co.uk/" target="_blank" class="btn">Official Website</a>
+                <a href="http://www.trinityhouse.co.uk/" target="_blank" class="btn">Official Website</a>
                 <a href="https://en.wikipedia.org/wiki/Trinity_House" target="_blank" class="btn btn-secondary">Wikipedia</a>
                 
                 <a href="https://www.wikidata.org/entity/Q1570725"
                    target="_blank" class="btn btn-secondary">Wikidata</a>
                 
+            </div>
+            
+            <div class="multilang-links">
+                <p>Wikipedia in other languages:</p>
+                <div class="links">
+                    
+                    
+                    
+                    
+                    <a href="https://de.wikipedia.org/wiki/Trinity_House" target="_blank" class="btn btn-secondary btn-small">de</a>
+                    
+                    
+                    
+                    <a href="https://fr.wikipedia.org/wiki/Trinity_House" target="_blank" class="btn btn-secondary btn-small">fr</a>
+                    
+                    
+                    
+                    <a href="https://it.wikipedia.org/wiki/Trinity_House" target="_blank" class="btn btn-secondary btn-small">it</a>
+                    
+                    
+                    
+                    <a href="https://es.wikipedia.org/wiki/Trinity_House" target="_blank" class="btn btn-secondary btn-small">es</a>
+                    
+                    
+                    
+                    <a href="https://nl.wikipedia.org/wiki/Trinity_House" target="_blank" class="btn btn-secondary btn-small">nl</a>
+                    
+                    
+                    
+                    <a href="https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%AA%E3%83%8B%E3%83%86%E3%82%A3%E3%83%BB%E3%83%8F%E3%82%A6%E3%82%B9" target="_blank" class="btn btn-secondary btn-small">ja</a>
+                    
+                    
+                    
+                    <a href="https://ru.wikipedia.org/wiki/%D0%A2%D1%80%D0%B8%D0%BD%D0%B8%D1%82%D0%B8-%D1%85%D0%B0%D1%83%D1%81" target="_blank" class="btn btn-secondary btn-small">ru</a>
+                    
+                    
+                </div>
             </div>
             
         </div>

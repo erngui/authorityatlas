@@ -460,7 +460,7 @@
         const { lat, lon } = entry.coordinates;
         const popup = `
           <div style="min-width:200px">
-            <strong><a href="${entry.filename}">${entry.name}</a></strong><br/>
+            <strong><a href="${entry.filename}">${entry.display_name}</a></strong><br/>
             ${entry.acronym ? `<em>${entry.acronym}</em><br/>` : ''}
             ${entry.headquarters_address
               ? `📍 ${entry.headquarters_address}<br/>`

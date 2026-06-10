@@ -1,67 +1,67 @@
-# Authority Atlas - Minimal Metadata Version
-# Focus: Enable discovery, search, and navigation to authoritative sources
-# Philosophy: Index card, not encyclopedia entry
-#
-# CONVENTIONS:
-# - Markdown links supported in 'factoid' field
-# - Wikipedia page is required (create if necessary before indexing)
-# - Focus on clean, structured metadata for discovery rather than comprehensive content
-# - Tags can supplement structured fields with additional searchable information
-
 authorities:
-
-- name: "Trinity House"
-  acronym: "TH"
-  
-  # Core identification
-  type: "Executive non-departmental public body"
-  remit: "General Lighthouse Authority for England, Wales, the Channel Islands, and Gibraltar, responsible for maritime navigation aids including lighthouses, buoys, and beacons."
-  
-  # Discoverability
-  establishment_country: "United Kingdom"
-  regional_remit: "England, Wales, Channel Islands, Gibraltar"
-  
-  # Location (for mapping and contact)
-  headquarters_address: "Tower Hill, London EC3N 4DH, United Kingdom"
-  headquarters_city: "London"
-  headquarters_country: "United Kingdom"
-  
-  # Dates (year only for simplicity)
+- name: The Master, Wardens and Assistants of the Guild, Fraternity or Brotherhood
+    of the most glorious and undivided Trinity and of St. Clement in the Parish of
+    Deptford Strond, in the County of Kent
+  shortname: "Trinity House"
+  acronym: TH
+  type: privately held company
+  remit: General Lighthouse Authority for England, Wales, the Channel Islands, and
+    Gibraltar, responsible for maritime navigation aids including lighthouses, buoys,
+    and beacons.
+  establishment_country: GB
+  regional_remit: England, Wales, Channel Islands, Gibraltar
+  headquarters_address: Tower Hill, London EC3N 4DH, United Kingdom
+  headquarters_city: London
+  headquarters_country: United Kingdom
   year_established: 1514
-  
-  # Organizational evolution
-  predecessor_organizations: "Guild of Mariners of Deptford Strand (informal mariners' association, pre-1514)"
-  
-  # Wikidata
-  wikidata_id: "Q1570725"
+  predecessor_organizations: Guild of Mariners of Deptford Strand (informal mariners'
+    association, pre-1514)
+  wikidata_id: Q1570725
   coordinates:
-    lat: 51.5095
-    lon: -0.0762
-
-  # Links to authoritative sources
-  website: "https://www.trinityhouse.co.uk/"
-  wikipedia: "https://en.wikipedia.org/wiki/Trinity_House"
-  
-  # Factoid - Context and significance: Why this authority exists, its place in the regulatory ecosystem,
-  # and what makes it notable. Focus on: (1) category/similar authorities, (2) origin story/historical moment,
-  # (3) significance. Aim for 1-3 sentences that instill wonder about the regulatory landscape.
-  factoid: "Trinity House was [established by Royal Charter in 1514](https://www.trinityhouse.co.uk/about-us/history-of-trinity-house/th500) after Thames mariners petitioned the king in 1513 for powers to regulate dangerous unqualified pilots. It represents one of the world's oldest continuously operating maritime safety organizations, predating most modern regulatory concepts."
-  
-  # Legal basis (founding documents and current framework)
-  legal_basis_name: "Royal Charter of 1685 and Merchant Shipping Act 1995"
-  legal_basis_link: "https://www.legislation.gov.uk/ukpga/1995/21/contents"
-  
-  # Leadership structure
-  head_title: "Master"
-  
-  # Tags for search/filtering
-  tags: ["United Kingdom", "England", "Wales", "Channel Islands", "Gibraltar", "Lighthouses", "Navigation Aids", "Maritime Safety", "Royal Charter", "Charity", "Public Service", "Coastal Navigation", "Henry VIII", "Historic"]
-
-  # Additional resources beyond official website and Wikipedia
+    lat: 51.51
+    lon: -0.077
+  website: http://www.trinityhouse.co.uk/
+  wikipedia: https://en.wikipedia.org/wiki/Trinity_House
+  factoid: Trinity House was [established by Royal Charter in 1514](https://www.trinityhouse.co.uk/about-us/history-of-trinity-house/th500)
+    after Thames mariners petitioned the king in 1513 for powers to regulate dangerous
+    unqualified pilots. It represents one of the world's oldest continuously operating
+    maritime safety organizations, predating most modern regulatory concepts.
+  legal_basis_name: Royal Charter of 1685 and Merchant Shipping Act 1995
+  legal_basis_link: https://www.legislation.gov.uk/ukpga/1995/21/contents
+  head_title: Master
+  tags:
+  - United Kingdom
+  - England
+  - Wales
+  - Channel Islands
+  - Gibraltar
+  - Lighthouses
+  - Navigation Aids
+  - Maritime Safety
+  - Royal Charter
+  - Charity
+  - Public Service
+  - Coastal Navigation
+  - Henry VIII
+  - Historic
   additional_resources:
-    - name: "Grace's Guide to British Industrial History"
-      description: "Comprehensive historical account of Trinity House's founding, development of lighthouse technology, and role in British maritime commerce from the Tudor period through industrialization."
-      link: "https://www.gracesguide.co.uk/Trinity_House"
-    - name: "UK Government Official Page"
-      description: "Current statutory responsibilities and relationship with the Department for Transport, including modern regulatory framework for General Lighthouse Authorities."
-      link: "https://www.gov.uk/government/organisations/trinity-house"
+  - name: Grace's Guide to British Industrial History
+    description: Comprehensive historical account of Trinity House's founding, development
+      of lighthouse technology, and role in British maritime commerce from the Tudor
+      period through industrialization.
+    link: https://www.gracesguide.co.uk/Trinity_House
+  - name: UK Government Official Page
+    description: Current statutory responsibilities and relationship with the Department
+      for Transport, including modern regulatory framework for General Lighthouse
+      Authorities.
+    link: https://www.gov.uk/government/organisations/trinity-house
+  wikipedia_multilang:
+    en: https://en.wikipedia.org/wiki/Trinity_House
+    de: https://de.wikipedia.org/wiki/Trinity_House
+    fr: https://fr.wikipedia.org/wiki/Trinity_House
+    it: https://it.wikipedia.org/wiki/Trinity_House
+    es: https://es.wikipedia.org/wiki/Trinity_House
+    nl: https://nl.wikipedia.org/wiki/Trinity_House
+    ja: https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%AA%E3%83%8B%E3%83%86%E3%82%A3%E3%83%BB%E3%83%8F%E3%82%A6%E3%82%B9
+    ru: https://ru.wikipedia.org/wiki/%D0%A2%D1%80%D0%B8%D0%BD%D0%B8%D1%82%D0%B8-%D1%85%D0%B0%D1%83%D1%81
+  image: http://commons.wikimedia.org/wiki/Special:FilePath/Eastern%20City%20of%20London%20trinity%2008.03.2013%2015-56-05.jpg

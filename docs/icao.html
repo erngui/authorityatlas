@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Civil Aviation Organization - AuthorityAtlas</title>
+    <title>ICAO - AuthorityAtlas</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
@@ -162,12 +162,21 @@
             margin: 0;
         }
         
+        .logo {
+            max-width: 200px;
+            max-height: 100px;
+            float: right;
+            margin-left: 20px;
+        }
+        
     </style>
 </head>
 <body>
     <a href="index.html" class="back-link">← Back to AuthorityAtlas</a>
     
     <header>
+        
+        <img src="http://commons.wikimedia.org/wiki/Special:FilePath/ICAO%20World%20Headquarters.jpg" alt="International Civil Aviation Organization logo" class="logo">
         
         <h1>International Civil Aviation Organization</h1>
         <p class="acronym">ICAO</p>
@@ -196,7 +205,7 @@
             <h2>Core Information</h2>
             <div class="info-grid">
                 <div class="info-label">Type:</div>
-                <div class="info-value">United Nations specialized agency</div>
+                <div class="info-value">specialized agency of the United Nations</div>
 
                 <div class="info-label">Established:</div>
                 <div class="info-value">1944</div>
@@ -233,14 +242,14 @@
             <div id="authority-map" style="height:280px;margin-top:1rem;border-radius:6px;"></div>
             <script>
               (function(){
-                var map = L.map('authority-map').setView([45.4986, -73.568], 13);
+                var map = L.map('authority-map').setView([45.500278, -73.564167], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                   maxZoom: 19
                 }).addTo(map);
-                L.marker([45.4986, -73.568])
+                L.marker([45.500278, -73.564167])
                   .addTo(map)
-                  .bindPopup('<strong>' + "International Civil Aviation Organization" + '</strong><br>' + "999 Robert-Bourassa Boulevard, Montr\u00e9al, Quebec H3C 5H7, Canada")
+                  .bindPopup('<strong>' + "ICAO" + '</strong><br>' + "999 Robert-Bourassa Boulevard, Montr\u00e9al, Quebec H3C 5H7, Canada")
                   .openPopup();
               })();
             </script>
@@ -258,12 +267,61 @@
         <div class="section">
             <h2>Official Sources</h2>
             <div class="links">
-                <a href="https://www.icao.int/" target="_blank" class="btn">Official Website</a>
+                <a href="https://icao.int" target="_blank" class="btn">Official Website</a>
                 <a href="https://en.wikipedia.org/wiki/International_Civil_Aviation_Organization" target="_blank" class="btn btn-secondary">Wikipedia</a>
                 
                 <a href="https://www.wikidata.org/entity/Q125761"
                    target="_blank" class="btn btn-secondary">Wikidata</a>
                 
+            </div>
+            
+            <div class="multilang-links">
+                <p>Wikipedia in other languages:</p>
+                <div class="links">
+                    
+                    
+                    
+                    
+                    <a href="https://de.wikipedia.org/wiki/Internationale_Zivilluftfahrtorganisation" target="_blank" class="btn btn-secondary btn-small">de</a>
+                    
+                    
+                    
+                    <a href="https://fr.wikipedia.org/wiki/Organisation_de_l%27aviation_civile_internationale" target="_blank" class="btn btn-secondary btn-small">fr</a>
+                    
+                    
+                    
+                    <a href="https://it.wikipedia.org/wiki/Organizzazione_internazionale_dell%27aviazione_civile" target="_blank" class="btn btn-secondary btn-small">it</a>
+                    
+                    
+                    
+                    <a href="https://es.wikipedia.org/wiki/Organizaci%C3%B3n_de_Aviaci%C3%B3n_Civil_Internacional" target="_blank" class="btn btn-secondary btn-small">es</a>
+                    
+                    
+                    
+                    <a href="https://nl.wikipedia.org/wiki/Internationale_Burgerluchtvaartorganisatie" target="_blank" class="btn btn-secondary btn-small">nl</a>
+                    
+                    
+                    
+                    <a href="https://pt.wikipedia.org/wiki/Organiza%C3%A7%C3%A3o_da_Avia%C3%A7%C3%A3o_Civil_Internacional" target="_blank" class="btn btn-secondary btn-small">pt</a>
+                    
+                    
+                    
+                    <a href="https://zh.wikipedia.org/wiki/%E5%9B%BD%E9%99%85%E6%B0%91%E7%94%A8%E8%88%AA%E7%A9%BA%E7%BB%84%E7%BB%87" target="_blank" class="btn btn-secondary btn-small">zh</a>
+                    
+                    
+                    
+                    <a href="https://ja.wikipedia.org/wiki/%E5%9B%BD%E9%9A%9B%E6%B0%91%E9%96%93%E8%88%AA%E7%A9%BA%E6%A9%9F%E9%96%A2" target="_blank" class="btn btn-secondary btn-small">ja</a>
+                    
+                    
+                    
+                    <a href="https://ar.wikipedia.org/wiki/%D9%85%D9%86%D8%B8%D9%85%D8%A9_%D8%A7%D9%84%D8%B7%D9%8A%D8%B1%D8%A7%D9%86_%D8%A7%D9%84%D9%85%D8%AF%D9%86%D9%8A_%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A" target="_blank" class="btn btn-secondary btn-small">ar</a>
+                    
+                    
+                    
+                    <a href="https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D0%B6%D0%B4%D1%83%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D0%B0%D1%8F_%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F_%D0%B3%D1%80%D0%B0%D0%B6%D0%B4%D0%B0%D0%BD%D1%81%D0%BA%D0%BE%D0%B9_%D0%B0%D0%B2%D0%B8%D0%B0%D1%86%D0%B8%D0%B8" target="_blank" class="btn btn-secondary btn-small">ru</a>
+                    
+                    
+                </div>
             </div>
             
         </div>

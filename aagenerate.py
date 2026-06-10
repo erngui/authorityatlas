@@ -116,6 +116,9 @@ def validate_authority(authority: dict[str, Any], filename: str) -> None:
     if authority.get("wikipedia_multilang") is not None:
         if not isinstance(authority["wikipedia_multilang"], dict):
             raise TypeError(f"'wikipedia_multilang' should be a dict in file: {filename}")
+    if authority.get("shortname") is not None:
+        if not isinstance(authority["shortname"], str):
+            raise TypeError(f"'shortname' should be a string in file: {filename}")
     optional_fields = [
         "factoid",
         "head_title",
@@ -125,6 +128,7 @@ def validate_authority(authority: dict[str, Any], filename: str) -> None:
         "wikidata_id",
         "coordinates",
         "wikipedia_multilang",
+        "shortname",
     ]
     missing_optional = [f for f in optional_fields if not authority.get(f)]
     if missing_optional:
@@ -171,12 +175,12 @@ def generate_site(
                 authority["headquarters_country"]
             )
 
-            safe_name = "".join(
-                c
-                for c in authority["name"].replace(" ", "_").replace("/", "-").lower()
-                if c.isalnum() or c in ("_", "-")
+            article_filename = f"{os.path.splitext(filename)[0]}.html"
+            authority["display_name"] = (
+                authority.get("shortname")
+                or authority.get("acronym")
+                or authority["name"]
             )
-            article_filename = f"{safe_name}.html"
 
             article_output = article_template.render(authority=authority)
             with open(os.path.join(output_dir, article_filename), "w", encoding="utf-8") as outf:
@@ -186,6 +190,7 @@ def generate_site(
             articles.append(
                 {
                     "name": authority["name"],
+                    "display_name": authority["display_name"],
                     "acronym": authority.get("acronym", ""),
                     "remit": authority.get("remit", ""),
                     "factoid": authority.get("factoid", ""),
