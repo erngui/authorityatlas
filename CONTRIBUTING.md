@@ -98,16 +98,52 @@ add a comment explaining *why*.
 Authority Atlas content lives in `data/articles/`. Each file represents one
 authority and follows the schema validated by `aagenerate.py`.
 
-- Use `aafetch.py --qid Q<id> --dry-run` to preview Wikidata-seeded content before
-  writing any file.
-- Use **`data/articles/trinity_house.yaml`** as the reference template — it documents
-  every field with a real example.
-- Human-curated fields (`remit`, `factoid`, `legal_basis_*`, `tags`, etc.) are never
-  overwritten by `aafetch.py`. Fill them in manually; they are your contribution.
-- Run `python aagenerate.py` and fix any validation warnings before committing.
-- Keep `remit` under ~400 visible characters and `factoid` under ~250 — `aagenerate.py`
-  will warn when these limits are exceeded. URLs inside markdown links do not count
-  toward the visible length.
+### Before you start
+
+The authority must have an **English Wikipedia page** — this is the notability bar.
+If one does not exist, create it with proper sources before opening a PR.
+
+### Seeding from Wikidata (recommended)
+
+If the authority has a Wikidata entry, use `aafetch.py` to pre-populate most fields:
+
+```bash
+# Preview without writing anything:
+python aafetch.py --qid Q48835 --dry-run
+
+# Write the seeded YAML (filename derived from name/acronym automatically):
+python aafetch.py --qid Q48835
+```
+
+`aafetch.py` fetches name, acronym, year, website, Wikipedia links, coordinates,
+legal basis, and more. Human-curated fields (`remit`, `factoid`, `legal_basis_*`,
+`tags`, etc.) are never overwritten — those are your contribution.
+
+**Pay attention to the coordinate diagnostics printed during the run:**
+- `Coordinates [P625]` — direct from the authority's Wikidata entry. Good.
+- `Coordinates [P276→P625]` + **WARNING** — from a linked building/location item;
+  verify they match the actual headquarters before committing.
+- `Nominatim (name+country)` + **WARNING** — no Wikidata coordinates found; result
+  may be a city centroid, not the real address. Replace if possible.
+- `Suggested sector tags from Wikidata (P101/P452)` — hints only; use as input
+  to the tagging step below, not as final tags.
+
+If the authority is not in Wikidata, create the YAML by hand using
+`data/articles/trinity_house.yaml` as your template — it documents every field.
+
+### Completing the YAML
+
+At minimum, fill in these fields before opening a PR:
+
+| Field | Guidance |
+|-------|----------|
+| `remit` | What the authority actually does — under ~400 visible chars |
+| `factoid` | 1–3 sentences: origin story, sense of wonder — under ~250 visible chars |
+| `legal_basis_name` / `legal_basis_link` | Founding treaty, statute, or charter |
+| `tags` | See tagging rules below |
+| `headquarters_address` | Full address for accurate map placement |
+
+Run `python aagenerate.py` and resolve all warnings before committing.
 
 ### Tagging
 

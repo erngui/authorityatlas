@@ -1,0 +1,104 @@
+name: Propose a New Authority
+description: Suggest an organisation to add to Authority Atlas
+title: "[AUTHORITY] <Name of Authority>"
+labels: ["new-authority"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an authority! Fill in as much as you know —
+        maintainers will complete missing fields and create the YAML entry.
+
+        **Minimum requirement:** the authority must have an English Wikipedia page.
+        If one does not exist, please create it first (with proper sources).
+
+  - type: input
+    id: name
+    attributes:
+      label: Full official name
+      placeholder: e.g. International Maritime Organization
+    validations:
+      required: true
+
+  - type: input
+    id: wikipedia
+    attributes:
+      label: Wikipedia URL
+      description: English Wikipedia page — required for inclusion
+      placeholder: https://en.wikipedia.org/wiki/...
+    validations:
+      required: true
+
+  - type: input
+    id: wikidata
+    attributes:
+      label: Wikidata ID
+      description: Q-number from wikidata.org (leave blank if unsure)
+      placeholder: e.g. Q48835
+
+  - type: input
+    id: website
+    attributes:
+      label: Official website
+      placeholder: https://
+
+  - type: textarea
+    id: remit
+    attributes:
+      label: What does this authority do?
+      description: 1–3 sentences describing its mandate and why it serves the common good
+    validations:
+      required: true
+
+  - type: input
+    id: country
+    attributes:
+      label: Establishment country / headquarters
+      placeholder: e.g. France, or Global (for international bodies)
+
+  - type: input
+    id: year
+    attributes:
+      label: Year established
+      placeholder: e.g. 1948
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Primary domain (pick the closest)
+      options:
+        - marine
+        - atmospheric
+        - space
+        - terrestrial
+        - freshwater
+        - biodiversity
+        - food-agriculture
+        - health
+        - labour
+        - finance
+        - trade
+        - energy
+        - nuclear
+        - transport
+        - telecommunications
+        - cultural-heritage
+        - education
+        - intellectual-property
+        - justice
+        - civil-society
+        - industrial-development
+        - digital
+        - sport
+        - media
+        - other
+
+  - type: checkboxes
+    id: notability
+    attributes:
+      label: Checklist
+      options:
+        - label: This authority has an English Wikipedia page
+          required: true
+        - label: This authority has a formal mandate (established by treaty, statute, or charter)
+          required: true
