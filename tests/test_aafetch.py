@@ -18,6 +18,7 @@ import aafetch
 _FULL_BINDINGS: list[dict[str, Any]] = [
     {
         "officialName": {"value": "Test Authority"},
+        "shortName": {"value": "TA"},
         "inception": {"value": "1944-04-04T00:00:00Z"},
         "website": {"value": "https://example.org"},
         "lat": {"value": "45.4215"},
@@ -28,6 +29,10 @@ _FULL_BINDINGS: list[dict[str, Any]] = [
         "image": {"value": "https://commons.wikimedia.org/wiki/File:Logo.png"},
         "enwiki": {"value": "https://en.wikipedia.org/wiki/Test_Authority"},
         "frwiki": {"value": "https://fr.wikipedia.org/wiki/Test_Autorite"},
+        "legalBasisName": {"value": "Convention on Test Authority"},
+        "legalBasisLink": {"value": "https://example.org/treaty"},
+        "fieldOfWork": {"value": "air transport"},
+        "industry": {"value": "transport"},
     }
 ]
 
@@ -62,6 +67,24 @@ def test_fetch_entity_parses_full_response(mock_sparql: MagicMock) -> None:
     assert result["establishment_country"] == "CA"
     assert result["type"] == "intergovernmental organization"
     assert result["image"] == "https://commons.wikimedia.org/wiki/File:Logo.png"
+
+
+def test_fetch_entity_parses_acronym_from_p1813(mock_sparql: MagicMock) -> None:
+    result = aafetch.fetch_entity("170918")
+    assert result["acronym"] == "TA"
+
+
+def test_fetch_entity_falls_back_to_rdfs_label_and_warns(
+    mock_sparql: MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    bindings = [{k: v for k, v in _FULL_BINDINGS[0].items() if k != "officialName"}]
+    bindings[0]["entityLabel"] = {"value": "Fallback Label"}
+    mock_sparql.return_value = _mock_response(bindings)
+    result = aafetch.fetch_entity("170918")
+    assert result["name"] == "Fallback Label"
+    captured = capsys.readouterr()
+    assert "WARNING" in captured.out
+    assert "P1448" in captured.out
 
 
 def test_fetch_entity_parses_coordinates(mock_sparql: MagicMock) -> None:
@@ -130,6 +153,38 @@ def test_fetch_entity_handles_malformed_inception_date(mock_sparql: MagicMock) -
     mock_sparql.return_value = _mock_response(bindings)
     result = aafetch.fetch_entity("170918")
     assert result["year_established"] is None
+
+
+def test_fetch_entity_parses_legal_basis_from_p457(mock_sparql: MagicMock) -> None:
+    result = aafetch.fetch_entity("170918")
+    assert result["legal_basis_name"] == "Convention on Test Authority"
+    assert result["legal_basis_link"] == "https://example.org/treaty"
+
+
+def test_fetch_entity_parses_suggested_tags_from_p101_p452(mock_sparql: MagicMock) -> None:
+    result = aafetch.fetch_entity("170918")
+    assert result["_suggested_tags"] == ["air transport", "transport"]
+
+
+def test_fetch_entity_suggested_tags_empty_when_absent(mock_sparql: MagicMock) -> None:
+    bindings = [
+        {k: v for k, v in _FULL_BINDINGS[0].items()
+         if k not in ("fieldOfWork", "industry")}
+    ]
+    mock_sparql.return_value = _mock_response(bindings)
+    result = aafetch.fetch_entity("170918")
+    assert result["_suggested_tags"] == []
+
+
+def test_fetch_entity_handles_missing_p457(mock_sparql: MagicMock) -> None:
+    bindings = [
+        {k: v for k, v in _FULL_BINDINGS[0].items()
+         if k not in ("legalBasisName", "legalBasisLink")}
+    ]
+    mock_sparql.return_value = _mock_response(bindings)
+    result = aafetch.fetch_entity("170918")
+    assert result["legal_basis_name"] == ""
+    assert result["legal_basis_link"] == ""
 
 
 # ---------------------------------------------------------------------------
@@ -203,6 +258,23 @@ def test_seed_yaml_writes_file(mock_sparql: MagicMock) -> None:
         assert doc["authorities"][0]["name"] == "Test Authority"
 
 
+def test_seed_yaml_new_file_uses_scaffold(mock_sparql: MagicMock) -> None:
+    mock_sparql.return_value = _mock_response(_FULL_BINDINGS)
+    with tempfile.TemporaryDirectory() as tmp:
+        out = os.path.join(tmp, "new_authority.yaml")
+        aafetch.seed_yaml("170918", out)
+        with open(out, encoding="utf-8") as f:
+            doc = yaml.safe_load(f)
+    authority = doc["authorities"][0]
+    # Wikidata fields seeded
+    assert authority["name"] == "Test Authority"
+    assert authority["acronym"] == "TA"
+    assert authority["wikidata_id"] == "Q170918"
+    # All scaffold fields present (even empty ones)
+    for field in aafetch._AUTHORITY_SCAFFOLD:
+        assert field in authority, f"scaffold field '{field}' missing from new file"
+
+
 def test_seed_yaml_dry_run_does_not_write(
     mock_sparql: MagicMock, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -259,6 +331,19 @@ def test_seed_yaml_falls_back_to_nominatim_when_no_coordinates(
                 with open(out, encoding="utf-8") as f:
                     doc = yaml.safe_load(f)
     assert doc["authorities"][0]["coordinates"] == {"lat": 51.5, "lon": -0.1}
+
+
+def test_seed_yaml_prints_suggested_tags(
+    mock_sparql: MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    mock_sparql.return_value = _mock_response(_FULL_BINDINGS)
+    with tempfile.TemporaryDirectory() as tmp:
+        out = os.path.join(tmp, "authority.yaml")
+        aafetch.seed_yaml("170918", out)
+    captured = capsys.readouterr()
+    assert "Suggested sector tags" in captured.out
+    assert "air transport" in captured.out
+    assert "transport" in captured.out
 
 
 def test_seed_yaml_warns_when_coordinates_from_p276(

@@ -89,21 +89,54 @@ _WIKI_LANGS = ("en", "de", "fr", "it", "es", "nl", "pt", "zh", "ja", "ar", "ru")
 # P297      ISO 3166-1 alpha-2 code     ?countryCode
 # P131      located in admin. territory ?adminTerritory (English label)
 # P31       instance of (entity type)   ?instanceOf (English label)
+# P1448     official name               ?officialName  (preferred)
+#   fallback: rdfs:label                ?entityLabel   (always present; used when
+#             P1448 is absent — aafetch warns when this fallback fires because it
+#             may indicate a Wikidata entry that hasn't been fully maintained)
+# P1813     short name / acronym        ?shortName
+#             Language-filtered to English. Maps to the `acronym` field.
+#             Example: "ICAO" for the International Civil Aviation Organization.
 # P18       image (Commons file URL)    ?image
+# P101      field of work               ?fieldOfWork     (tag hint)
+# P452      industry                    ?industry        (tag hint)
+#             Both are multi-valued; LIMIT 1 returns only the first value
+#             Wikidata returns for each. Treated as hints only — printed as
+#             "Suggested sector tags" and never written to the YAML.
+#             Coverage is patchy: present on prominent UN agencies (WHO,
+#             ILO, FAO) but absent on more specialised bodies (ICAO, ISA).
+#
+# P457      foundational text           ?legalBasisName / ?legalBasisLink
+#             Links to the official document that established the authority
+#             (a treaty, charter, or statute).  The linked item's rdfs:label
+#             gives the document name (?legalBasisName); its P953 ("full work
+#             available at URL") gives a direct link (?legalBasisLink).
+#             Coverage is patchy — present for ICAO (Chicago Convention) and
+#             ISA (UNCLOS), absent for Trinity House and Rijnland.
+#             Both fields are in _CURATED_FIELDS: written only for new files
+#             (scaffold mode) and when --force-wikidata is passed.
 #
 # Wikipedia sitelinks are fetched via schema:isPartOf per language (see
 # _build_sparql_query).  They are not Wikidata properties but graph links.
 # ---------------------------------------------------------------------------
 
 _SPARQL_TEMPLATE = """\
-SELECT ?officialName ?inception ?website ?coords ?lat ?lon ?locLat ?locLon
-       ?countryCode ?adminTerritory ?instanceOf ?image
+SELECT ?officialName ?entityLabel ?shortName ?inception ?website ?coords ?lat ?lon ?locLat ?locLon
+       ?countryCode ?adminTerritory ?instanceOf ?image ?legalBasisName ?legalBasisLink
+       ?fieldOfWork ?industry
        {wiki_selects}
 WHERE {{
   BIND(wd:Q{qid} AS ?entity)
   OPTIONAL {{
     ?entity wdt:P1448 ?officialName .
     FILTER(LANG(?officialName) = "en")
+  }}
+  OPTIONAL {{
+    ?entity rdfs:label ?entityLabel .
+    FILTER(LANG(?entityLabel) = "en")
+  }}
+  OPTIONAL {{
+    ?entity wdt:P1813 ?shortName .
+    FILTER(!LANG(?shortName) || LANG(?shortName) = "en")
   }}
   OPTIONAL {{ ?entity wdt:P571 ?inception }}
   OPTIONAL {{ ?entity wdt:P856 ?website }}
@@ -133,6 +166,22 @@ WHERE {{
     FILTER(LANG(?instanceOf) = "en")
   }}
   OPTIONAL {{ ?entity wdt:P18 ?image }}
+  OPTIONAL {{
+    ?entity wdt:P457 ?foundingDoc .
+    ?foundingDoc rdfs:label ?legalBasisName .
+    FILTER(LANG(?legalBasisName) = "en")
+    OPTIONAL {{ ?foundingDoc wdt:P953 ?legalBasisLink . }}
+  }}
+  OPTIONAL {{
+    ?entity wdt:P101 ?fwItem .
+    ?fwItem rdfs:label ?fieldOfWork .
+    FILTER(LANG(?fieldOfWork) = "en")
+  }}
+  OPTIONAL {{
+    ?entity wdt:P452 ?indItem .
+    ?indItem rdfs:label ?industry .
+    FILTER(LANG(?industry) = "en")
+  }}
   {wiki_optionals}
 }}
 LIMIT 1
@@ -263,9 +312,20 @@ def fetch_entity(qid: str) -> dict[str, Any]:
             multilang[lang] = row[key]["value"]
 
     coords, coord_source = _parse_coordinates(row)
+
+    official_name = row.get("officialName", {}).get("value")
+    if not official_name:
+        print(
+            f"  WARNING: Q{qid} has no P1448 (official name) — falling back to "
+            "rdfs:label. The Wikidata entry may be under-maintained; consider "
+            "adding P1448 at https://www.wikidata.org/wiki/Q" + qid
+        )
+    name = official_name or row.get("entityLabel", {}).get("value", "")
+
     return {
         "wikidata_id": f"Q{qid}",
-        "name": row.get("officialName", {}).get("value", ""),
+        "name": name,
+        "acronym": row.get("shortName", {}).get("value", ""),
         "year_established": _parse_year(row),
         "website": row.get("website", {}).get("value", ""),
         "wikipedia": multilang.get("en", ""),
@@ -274,8 +334,48 @@ def fetch_entity(qid: str) -> dict[str, Any]:
         "type": row.get("instanceOf", {}).get("value", ""),
         "image": row.get("image", {}).get("value", ""),
         "coordinates": coords,
+        "legal_basis_name": row.get("legalBasisName", {}).get("value", ""),
+        "legal_basis_link": row.get("legalBasisLink", {}).get("value", ""),
         "_coordinate_source": coord_source,
+        "_suggested_tags": [
+            v for v in (
+                row.get("fieldOfWork", {}).get("value", ""),
+                row.get("industry", {}).get("value", ""),
+            )
+            if v
+        ],
     }
+
+
+# Ordered template for new authority files. All fields are present so the
+# contributor knows exactly what to fill in. Wikidata-fetched values are
+# merged in on top; curated fields stay empty for the human to complete.
+# Field order mirrors data/articles/trinity_house.yaml (the reference template).
+_AUTHORITY_SCAFFOLD: dict[str, Any] = {
+    "name": "",
+    "shortname": "",
+    "acronym": "",
+    "type": "",
+    "remit": "",
+    "establishment_country": "",
+    "regional_remit": "",
+    "headquarters_address": "",
+    "headquarters_city": "",
+    "headquarters_country": "",
+    "year_established": None,
+    "predecessor_organizations": "",
+    "wikidata_id": "",
+    "coordinates": None,
+    "website": "",
+    "wikipedia": "",
+    "wikipedia_multilang": {},
+    "factoid": "",
+    "legal_basis_name": "",
+    "legal_basis_link": "",
+    "head_title": "",
+    "tags": [],
+    "additional_resources": [],
+}
 
 
 def wikidata_to_authority(
@@ -311,10 +411,12 @@ def seed_yaml(
     """Fetch Wikidata entity Q{qid} and write (or update) output_path YAML."""
     wikidata_data = fetch_entity(qid)
     coord_source: str = wikidata_data.pop("_coordinate_source", "none")
+    suggested_tags: list[str] = wikidata_data.pop("_suggested_tags", [])
 
     path = Path(output_path)
     existing_authority: dict[str, Any] | None = None
     existing_doc: dict[str, Any] = {}
+    is_new_file = not path.exists()
 
     if path.exists():
         with path.open(encoding="utf-8") as f:
@@ -322,6 +424,12 @@ def seed_yaml(
         authorities = existing_doc.get("authorities", [])
         if isinstance(authorities, list) and authorities:
             existing_authority = authorities[0]
+    else:
+        # New file: start from the full scaffold so all fields are present.
+        # force_wikidata=True because there is no existing curation to protect.
+        existing_authority = dict(_AUTHORITY_SCAFFOLD)
+        force_wikidata = True
+        print("  New file — generating scaffold with all fields.")
 
     merged = wikidata_to_authority(qid, wikidata_data, existing_authority, force_wikidata)
 
@@ -365,6 +473,14 @@ def seed_yaml(
                 print(f"  Geocoded [Nominatim]: lat={coords['lat']}, lon={coords['lon']}")
             else:
                 print("  Nominatim returned no results — coordinates left empty")
+
+    if suggested_tags:
+        print(f"  Suggested sector tags from Wikidata (P101/P452): {', '.join(suggested_tags)}")
+
+    if is_new_file:
+        empty = [f for f in ("remit", "factoid", "legal_basis_name", "tags") if not merged.get(f)]
+        if empty:
+            print(f"  TODO: fill in required fields before running aagenerate: {', '.join(empty)}")
 
     if dry_run:
         print(yaml.dump({"authorities": [merged]}, allow_unicode=True, sort_keys=False, indent=2))
@@ -415,9 +531,21 @@ def main() -> None:  # pragma: no cover
     args = parser.parse_args()
 
     qid = args.qid.lstrip("Qq")
-    output = args.output or f"data/articles/Q{qid}.yaml"
 
     try:
+        if args.output:
+            output = args.output
+        else:
+            # Fetch the entity first so we can derive a human-readable filename
+            # from the name or acronym rather than falling back to Q<number>.
+            entity = fetch_entity(qid)
+            raw = entity.get("acronym") or entity.get("name") or f"Q{qid}"
+            slug = "".join(
+                c for c in raw.replace(" ", "_").replace("/", "-").lower()
+                if c.isalnum() or c in ("_", "-")
+            )
+            output = f"data/articles/{slug}.yaml"
+            print(f"  Output: {output}")
         seed_yaml(qid, output, force_wikidata=args.force_wikidata, dry_run=args.dry_run)
     except ValueError as exc:
         print(f"Error: {exc}", file=sys.stderr)
