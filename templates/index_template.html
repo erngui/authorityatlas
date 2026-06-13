@@ -219,22 +219,14 @@
       font-size: 0.95rem;
       line-height: 1.5;
       margin-bottom: 0.75rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
-    
+
     .entry-factoid {
       color: #666;
       font-size: 0.9rem;
       line-height: 1.4;
       font-style: italic;
       margin-bottom: 0.75rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
     
     .entry-type {
@@ -245,6 +237,37 @@
       font-size: 0.8rem;
       color: #555;
       margin-top: 0.5rem;
+    }
+
+    .entry-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag-chip {
+      display: inline-block;
+      background: #e8f0fe;
+      color: #0645AD;
+      padding: 0.15rem 0.55rem;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border: 1px solid #c5d5f8;
+      transition: background 0.15s, color 0.15s;
+      user-select: none;
+    }
+
+    .tag-chip:hover {
+      background: #0645AD;
+      color: white;
+    }
+
+    .tag-chip.active {
+      background: #0645AD;
+      color: white;
+      border-color: #0645AD;
     }
     
     .entry-links {
@@ -379,6 +402,12 @@
         </select>
       </div>
       <div class="filter-group">
+        <label for="tagFilter">Tag:</label>
+        <select id="tagFilter">
+          <option value="">All Tags</option>
+        </select>
+      </div>
+      <div class="filter-group">
         <label for="sortFilter">Sort by:</label>
         <select id="sortFilter">
           <option value="name">Name (A-Z)</option>
@@ -416,6 +445,7 @@
     const searchInput = document.getElementById('searchInput');
     const countryFilter = document.getElementById('countryFilter');
     const typeFilter = document.getElementById('typeFilter');
+    const tagFilter = document.getElementById('tagFilter');
     const sortFilter = document.getElementById('sortFilter');
     const statsDiv = document.getElementById('stats');
 
@@ -506,17 +536,23 @@
       }
     }
 
+    function setTagFilter(tag) {
+      tagFilter.value = tagFilter.value === tag ? '' : tag;
+      filterAndSort();
+    }
+
     // Populate filter dropdowns
     function populateFilters() {
       const countries = new Set();
       const types = new Set();
+      const tags = new Set();
 
       allArticles.forEach(article => {
         if (article.establishment_country_name) countries.add(article.establishment_country_name);
         if (article.type) types.add(article.type);
+        if (article.tags) article.tags.forEach(t => tags.add(t));
       });
 
-      // Sort and add to dropdowns
       [...countries].sort().forEach(country => {
         const option = document.createElement('option');
         option.value = country;
@@ -529,6 +565,13 @@
         option.value = type;
         option.textContent = type;
         typeFilter.appendChild(option);
+      });
+
+      [...tags].sort().forEach(tag => {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.textContent = tag;
+        tagFilter.appendChild(option);
       });
     }
 
@@ -572,6 +615,10 @@
           ${entry.remit ? `<div class="entry-remit">${entry.remit}</div>` : ''}
           ${entry.factoid ? `<div class="entry-factoid">${entry.factoid}</div>` : ''}
           ${entry.type ? `<div class="entry-type">${entry.type}</div>` : ''}
+          ${entry.tags && entry.tags.length ? `
+            <div class="entry-tags">
+              ${entry.tags.map(t => `<span class="tag-chip${tagFilter.value === t ? ' active' : ''}" onclick="setTagFilter('${t}')">${t}</span>`).join('')}
+            </div>` : ''}
           <div class="entry-links">
             ${entry.website ? `
               <a href="${entry.website}" target="_blank" class="entry-link" onclick="event.stopPropagation()">
@@ -598,6 +645,7 @@
       const query = searchInput.value.toLowerCase();
       const selectedCountry = countryFilter.value;
       const selectedType = typeFilter.value;
+      const selectedTag = tagFilter.value;
       const sortBy = sortFilter.value;
 
       let filtered = allArticles.filter(entry => {
@@ -609,15 +657,14 @@
           (entry.type && entry.type.toLowerCase().includes(query)) ||
           (entry.establishment_country && entry.establishment_country.toLowerCase().includes(query)) ||
           (entry.headquarters_city && entry.headquarters_city.toLowerCase().includes(query)) ||
-          (entry.headquarters_country_name && entry.headquarters_country_name.toLowerCase().includes(query));
+          (entry.headquarters_country_name && entry.headquarters_country_name.toLowerCase().includes(query)) ||
+          (entry.tags && entry.tags.some(t => t.toLowerCase().includes(query)));
 
-        // Country filter
         const countryMatch = !selectedCountry || entry.establishment_country_name === selectedCountry;
-
-        // Type filter
         const typeMatch = !selectedType || entry.type === selectedType;
+        const tagMatch = !selectedTag || (entry.tags && entry.tags.includes(selectedTag));
 
-        return searchMatch && countryMatch && typeMatch;
+        return searchMatch && countryMatch && typeMatch && tagMatch;
       });
 
       // Sort
@@ -637,6 +684,7 @@
     searchInput.addEventListener('input', filterAndSort);
     countryFilter.addEventListener('change', filterAndSort);
     typeFilter.addEventListener('change', filterAndSort);
+    tagFilter.addEventListener('change', filterAndSort);
     sortFilter.addEventListener('change', filterAndSort);
 
     // Initialize

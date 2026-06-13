@@ -34,6 +34,11 @@ def markdown_links_to_html(text: str) -> str:
     return re.sub(pattern, r'<a href="\2" target="_blank">\1</a>', text)
 
 
+def _visible_length(text: str) -> int:
+    """Char count after collapsing markdown links to their display text only."""
+    return len(re.sub(r"\[([^\]]+)\]\([^\)]+\)", r"\1", text))
+
+
 def normalize_country_to_code(country_value: str) -> str:
     """Convert country names to ISO 3166-1 alpha-2 codes. Pass through if already a valid code."""
     if not country_value:
@@ -133,6 +138,16 @@ def validate_authority(authority: dict[str, Any], filename: str) -> None:
     missing_optional = [f for f in optional_fields if not authority.get(f)]
     if missing_optional:
         print(f"  Optional fields not provided: {', '.join(missing_optional)}")
+    _REMIT_WARN = 400
+    _FACTOID_WARN = 250
+    remit_visible = _visible_length(authority.get("remit", ""))
+    if remit_visible > _REMIT_WARN:
+        print(f"  WARNING: 'remit' renders to ~{remit_visible} chars — "
+              f"consider shortening to under {_REMIT_WARN} for card readability")
+    factoid_visible = _visible_length(authority.get("factoid", ""))
+    if factoid_visible > _FACTOID_WARN:
+        print(f"  WARNING: 'factoid' renders to ~{factoid_visible} chars — "
+              f"consider shortening to under {_FACTOID_WARN} for card readability")
     print(f"Validated: {authority['name']}")
 
 
@@ -204,6 +219,7 @@ def generate_site(
                     "website": authority.get("website", ""),
                     "wikipedia": authority.get("wikipedia", ""),
                     "filename": article_filename,
+                    "tags": authority.get("tags", []),
                     "coordinates": authority.get("coordinates"),
                     "wikidata_id": authority.get("wikidata_id", ""),
                     "headquarters_city": authority.get("headquarters_city", ""),
