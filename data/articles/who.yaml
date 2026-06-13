@@ -1,0 +1,41 @@
+authorities:
+- name: World Health Organization
+  shortname: ''
+  acronym: WHO
+  type:  specialized agency of the United Nations
+  remit: 'The WHO''s stated purpose is to achieve the highest possible level of health for all the world''s people, defining health as "a state of complete physical, mental and social well-being and not merely the absence of disease or infirmity."'
+  establishment_country: CH
+  regional_remit: 'Global'
+  headquarters_address: 'Avenue Appia 20, 1211 Geneva, Switzerland'
+  headquarters_city: 'Geneva'
+  headquarters_country: 'Switzerland'
+  year_established: 1948
+  predecessor_organizations: ''
+  wikidata_id: Q7817
+  coordinates:
+    lat: 46.23353503
+    lon: 6.134199261
+  website: https://www.who.int
+  wikipedia: https://en.wikipedia.org/wiki/World_Health_Organization
+  wikipedia_multilang:
+    en: https://en.wikipedia.org/wiki/World_Health_Organization
+    de: https://de.wikipedia.org/wiki/Weltgesundheitsorganisation
+    fr: https://fr.wikipedia.org/wiki/Organisation_mondiale_de_la_sant%C3%A9
+    it: https://it.wikipedia.org/wiki/Organizzazione_mondiale_della_sanit%C3%A0
+    es: https://es.wikipedia.org/wiki/Organizaci%C3%B3n_Mundial_de_la_Salud
+    nl: https://nl.wikipedia.org/wiki/Wereldgezondheidsorganisatie
+    pt: https://pt.wikipedia.org/wiki/Organiza%C3%A7%C3%A3o_Mundial_da_Sa%C3%BAde
+    zh: https://zh.wikipedia.org/wiki/%E4%B8%96%E7%95%8C%E5%8D%AB%E7%94%9F%E7%BB%84%E7%BB%87
+    ja: https://ja.wikipedia.org/wiki/%E4%B8%96%E7%95%8C%E4%BF%9D%E5%81%A5%E6%A9%9F%E9%96%A2
+    ar: https://ar.wikipedia.org/wiki/%D9%85%D9%86%D8%B8%D9%85%D8%A9_%D8%A7%D9%84%D8%B5%D8%AD%D8%A9_%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9
+    ru: https://ru.wikipedia.org/wiki/%D0%92%D1%81%D0%B5%D0%BC%D0%B8%D1%80%D0%BD%D0%B0%D1%8F_%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F_%D0%B7%D0%B4%D1%80%D0%B0%D0%B2%D0%BE%D0%BE%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F
+  factoid: 'Individuals can make financial contributions to support WHO through the independent WHO Foundation.'
+  legal_basis_name: 'Constitution of the World Health Organization'
+  legal_basis_link: 'http://apps.who.int/gb/bd/PDF/bd47/EN/constitution-en.pdf?ua=1'
+  head_title: 'Director-General'
+  tags: 
+  - health
+  - standard-setting
+  - coordination
+  additional_resources: []
+  image: http://commons.wikimedia.org/wiki/Special:FilePath/World%20Health%20Organisation%20headquarters%2C%20Geneva%2C%20north%20and%20west%20sides%202007.jpg
