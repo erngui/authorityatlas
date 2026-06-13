@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-py-modules = ["aagenerate"]
+py-modules = ["aagenerate", "aafetch"]
 
 [project]
 name = "authorityatlas"
@@ -36,6 +36,7 @@ select = ["E", "F", "W", "I", "UP", "B", "S"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]
+"aafetch.py" = ["S310"]  # urllib.request.urlopen — fixed Wikidata SPARQL endpoint
 
 [tool.mypy]
 python_version = "3.10"

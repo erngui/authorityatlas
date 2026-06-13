@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoogheemraadschap van Rijnland - AuthorityAtlas</title>
+    <title>ISA - AuthorityAtlas</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -21,6 +25,12 @@
         h1 {
             margin: 0 0 10px 0;
             color: #2c3e50;
+        }
+        .full-name {
+            color: #555;
+            font-size: 1em;
+            font-style: italic;
+            margin: 2px 0 0;
         }
         .acronym {
             color: #7f8c8d;
@@ -97,6 +107,23 @@
         .btn-secondary:hover {
             background-color: #7f8c8d;
         }
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+        .multilang-links {
+            margin-top: 12px;
+        }
+        .multilang-links p {
+            margin: 0 0 6px 0;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .multilang-links .links {
+            margin-top: 0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
         .resources {
             list-style: none;
             padding: 0;
@@ -141,6 +168,13 @@
             margin: 0;
         }
         
+        .logo {
+            max-width: 200px;
+            max-height: 100px;
+            float: right;
+            margin-left: 20px;
+        }
+        
     </style>
 </head>
 <body>
@@ -148,8 +182,12 @@
     
     <header>
         
-        <h1>Hoogheemraadschap van Rijnland</h1>
-        <p class="acronym">HHR</p>
+        <img src="http://commons.wikimedia.org/wiki/Special:FilePath/ISA%20Headquaters.jpg" alt="International Seabed Authority logo" class="logo">
+        
+        
+        <h1>International Seabed Authority</h1>
+        
+        <p class="acronym">ISA</p>
     </header>
 
     <div class="authority-context">
@@ -160,13 +198,13 @@
         <!-- Remit Section -->
         <div class="section">
             <h2>Remit</h2>
-            <p>Rijnland Regional Water Authority. Manages water levels, flood protection, and water quality in the region between roughly Velsen and Gouda, ensuring clean water and protection from flooding.</p>
+            <p>ISA has the mandate to ensure the effective protection of the marine environment from harmful effects that may arise from deep-seabed-related activities.</p>
         </div>
 
         <!-- Factoid Section (optional but recommended) -->
         
         <div class="factoid-box">
-            The oldest water authority in the Netherlands. Mission statement: Dry feet and clean water.
+            The Area protected by ISA/UNCLOS covers around 54 per cent of the total area of the world’s oceans.
         </div>
         
 
@@ -175,25 +213,22 @@
             <h2>Core Information</h2>
             <div class="info-grid">
                 <div class="info-label">Type:</div>
-                <div class="info-value">Regional water authority (Waterschap)</div>
+                <div class="info-value">international organization</div>
 
                 <div class="info-label">Established:</div>
-                <div class="info-value">1248</div>
+                <div class="info-value">1994</div>
 
                 <div class="info-label">Country:</div>
-                <div class="info-value country-code" data-country-code="NL">Netherlands</div>
+                <div class="info-value country-code" data-country-code="JM">Jamaica</div>
 
                 <div class="info-label">Regional Remit:</div>
-                <div class="info-value">Rijnland region</div>
+                <div class="info-value">Global</div>
 
                 
                 <div class="info-label">Leadership:</div>
-                <div class="info-value">Dijkgraaf (literally Dike Count)</div>
+                <div class="info-value">Secretary-General</div>
                 
 
-                
-                <div class="info-label">Predecessor:</div>
-                <div class="info-value">Informal cooperating water boards along the Oude Rijn (Old Rhine) river (pre-1248)</div>
                 
             </div>
         </div>
@@ -203,27 +238,97 @@
             <h2>Location</h2>
             <div class="info-grid">
                 <div class="info-label">Headquarters:</div>
-                <div class="info-value country-code" data-country-code="NL">Leiden, Netherlands</div>
+                <div class="info-value country-code" data-country-code="JM">Kingston, Jamaica</div>
 
                 <div class="info-label">Address:</div>
-                <div class="info-value">Archimedesweg 1, 2333 CM Leiden, Netherlands</div>
+                <div class="info-value">14 - 20 Port Royal Street, Kingston, Jamaica</div>
             </div>
+            
+            <div id="authority-map" style="height:280px;margin-top:1rem;border-radius:6px;"></div>
+            <script>
+              (function(){
+                var map = L.map('authority-map').setView([17.965200815, -76.791386604], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                  maxZoom: 19
+                }).addTo(map);
+                L.marker([17.965200815, -76.791386604])
+                  .addTo(map)
+                  .bindPopup('<strong>' + "ISA" + '</strong><br>' + "14 - 20 Port Royal Street, Kingston, Jamaica")
+                  .openPopup();
+              })();
+            </script>
+            
         </div>
 
         <!-- Legal Basis -->
         <div class="section">
             <h2>Legal Basis</h2>
-            <p>Water Board Act (Waterschapswet, 1991) and original commission from Count William II of Holland and Zeeland, 1248</p>
-            <a href="https://wetten.overheid.nl/BWBR0005108/" target="_blank" class="btn btn-secondary">View Legal Documents</a>
+            <p>United Nations Convention on the Law of the Sea (UNCLOS)</p>
+            <a href="https://www.un.org/Depts/los/convention_agreements/convention_overview_convention.htm" target="_blank" class="btn btn-secondary">View Legal Documents</a>
         </div>
 
         <!-- Official Links -->
         <div class="section">
             <h2>Official Sources</h2>
             <div class="links">
-                <a href="https://www.rijnland.net/" target="_blank" class="btn">Official Website</a>
-                <a href="https://en.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland" target="_blank" class="btn btn-secondary">Wikipedia</a>
+                <a href="https://www.isa.org.jm/" target="_blank" class="btn">Official Website</a>
+                <a href="https://en.wikipedia.org/wiki/International_Seabed_Authority" target="_blank" class="btn btn-secondary">Wikipedia</a>
+                
+                <a href="https://www.wikidata.org/entity/Q333727"
+                   target="_blank" class="btn btn-secondary">Wikidata</a>
+                
             </div>
+            
+            <div class="multilang-links">
+                <p>Wikipedia in other languages:</p>
+                <div class="links">
+                    
+                    
+                    
+                    
+                    <a href="https://de.wikipedia.org/wiki/Internationale_Meeresbodenbeh%C3%B6rde" target="_blank" class="btn btn-secondary btn-small">de</a>
+                    
+                    
+                    
+                    <a href="https://fr.wikipedia.org/wiki/Autorit%C3%A9_internationale_des_fonds_marins" target="_blank" class="btn btn-secondary btn-small">fr</a>
+                    
+                    
+                    
+                    <a href="https://it.wikipedia.org/wiki/Autorit%C3%A0_internazionale_dei_fondali_marini" target="_blank" class="btn btn-secondary btn-small">it</a>
+                    
+                    
+                    
+                    <a href="https://es.wikipedia.org/wiki/Autoridad_Internacional_de_los_Fondos_Marinos" target="_blank" class="btn btn-secondary btn-small">es</a>
+                    
+                    
+                    
+                    <a href="https://nl.wikipedia.org/wiki/Internationale_Zeebodemautoriteit" target="_blank" class="btn btn-secondary btn-small">nl</a>
+                    
+                    
+                    
+                    <a href="https://pt.wikipedia.org/wiki/Autoridade_Internacional_dos_Fundos_Marinhos" target="_blank" class="btn btn-secondary btn-small">pt</a>
+                    
+                    
+                    
+                    <a href="https://zh.wikipedia.org/wiki/%E5%9B%BD%E9%99%85%E6%B5%B7%E5%BA%95%E7%AE%A1%E7%90%86%E5%B1%80" target="_blank" class="btn btn-secondary btn-small">zh</a>
+                    
+                    
+                    
+                    <a href="https://ja.wikipedia.org/wiki/%E5%9B%BD%E9%9A%9B%E6%B5%B7%E5%BA%95%E6%A9%9F%E6%A7%8B" target="_blank" class="btn btn-secondary btn-small">ja</a>
+                    
+                    
+                    
+                    <a href="https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%B3%D9%84%D8%B7%D8%A9_%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9_%D9%84%D9%82%D8%A7%D8%B9_%D8%A7%D9%84%D8%A8%D8%AD%D8%A7%D8%B1" target="_blank" class="btn btn-secondary btn-small">ar</a>
+                    
+                    
+                    
+                    <a href="https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D0%B6%D0%B4%D1%83%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%8B%D0%B9_%D0%BE%D1%80%D0%B3%D0%B0%D0%BD_%D0%BF%D0%BE_%D0%BC%D0%BE%D1%80%D1%81%D0%BA%D0%BE%D0%BC%D1%83_%D0%B4%D0%BD%D1%83" target="_blank" class="btn btn-secondary btn-small">ru</a>
+                    
+                    
+                </div>
+            </div>
+            
         </div>
 
         <!-- Tags -->
@@ -231,65 +336,20 @@
             <h2>Categories</h2>
             <div class="tags">
                 
-                <a href="index.html?search=Netherlands" class="tag">Netherlands</a>
+                <a href="index.html?search=marine" class="tag">marine</a>
                 
-                <a href="index.html?search=Water%20Management" class="tag">Water Management</a>
+                <a href="index.html?search=biodiversity" class="tag">biodiversity</a>
                 
-                <a href="index.html?search=Flood%20Protection" class="tag">Flood Protection</a>
+                <a href="index.html?search=regulation" class="tag">regulation</a>
                 
-                <a href="index.html?search=Regional%20Authority" class="tag">Regional Authority</a>
+                <a href="index.html?search=conservation" class="tag">conservation</a>
                 
-                <a href="index.html?search=Water%20Quality" class="tag">Water Quality</a>
-                
-                <a href="index.html?search=Leiden" class="tag">Leiden</a>
-                
-                <a href="index.html?search=South%20Holland" class="tag">South Holland</a>
-                
-                <a href="index.html?search=Historic" class="tag">Historic</a>
-                
-                <a href="index.html?search=Medieval" class="tag">Medieval</a>
-                
-                <a href="index.html?search=Water%20Board" class="tag">Water Board</a>
-                
-                <a href="index.html?search=Waterschappen" class="tag">Waterschappen</a>
-                
-                <a href="index.html?search=Dutch%20Water" class="tag">Dutch Water</a>
-                
-                <a href="index.html?search=Rhine" class="tag">Rhine</a>
-                
-                <a href="index.html?search=Democracy" class="tag">Democracy</a>
-                
-                <a href="index.html?search=1248" class="tag">1248</a>
+                <a href="index.html?search=monitoring" class="tag">monitoring</a>
                 
             </div>
         </div>
 
         <!-- Additional Resources (optional) -->
-        
-        <div class="section">
-            <h2>Additional Resources</h2>
-            <ul class="resources">
-                
-                <li>
-                    <div class="resource-title">About Rijnland (English)</div>
-                    <div class="resource-description">Official English-language overview of Rijnland's mission, activities, and organizational structure in modern water management context.</div>
-                    <a href="https://www.rijnland.net/about-rijnland-eng/" target="_blank" class="btn btn-secondary">View Resource</a>
-                </li>
-                
-                <li>
-                    <div class="resource-title">Dutch Water Authorities: The Dutch Water Authority Model</div>
-                    <div class="resource-description">Comprehensive PDF explaining the unique governance structure, legal framework, and democratic functioning of Dutch water boards including their historical development.</div>
-                    <a href="https://dutchwaterauthorities.com/wp-content/uploads/2021/05/The-Dutch-water-authority-model.pdf" target="_blank" class="btn btn-secondary">View Resource</a>
-                </li>
-                
-                <li>
-                    <div class="resource-title">Water Board (Netherlands) - Wikipedia</div>
-                    <div class="resource-description">Detailed article on the Dutch water board system, explaining how these ancient democratic institutions function as independent governing bodies with taxing authority.</div>
-                    <a href="https://en.wikipedia.org/wiki/Water_board_(Netherlands)" target="_blank" class="btn btn-secondary">View Resource</a>
-                </li>
-                
-            </ul>
-        </div>
         
     </main>
 

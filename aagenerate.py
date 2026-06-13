@@ -27,11 +27,64 @@ _SPECIAL_COUNTRY_NAMES: dict[str, str] = {
     "EU": "European Union",
 }
 
+_DOMAIN_TAGS: frozenset[str] = frozenset(
+    {
+        "marine",
+        "atmospheric",
+        "space",
+        "terrestrial",
+        "freshwater",
+        "biodiversity",
+        "food-agriculture",
+        "health",
+        "labour",
+        "finance",
+        "trade",
+        "energy",
+        "nuclear",
+        "transport",
+        "telecommunications",
+        "cultural-heritage",
+        "education",
+        "intellectual-property",
+        "justice",
+        "civil-society",
+        "industrial-development",
+        "digital",
+        "sport",
+        "media",
+        "other",
+    }
+)
+
+_FUNCTION_TAGS: frozenset[str] = frozenset(
+    {
+        "regulation",
+        "standard-setting",
+        "conservation",
+        "coordination",
+        "monitoring",
+        "safety",
+        "development-aid",
+        "rights-protection",
+        "research",
+        "scientific-advisory",
+        "arbitration-judicial",
+    }
+)
+
+_VALID_TAGS: frozenset[str] = _DOMAIN_TAGS | _FUNCTION_TAGS
+
 
 def markdown_links_to_html(text: str) -> str:
     """Convert markdown links [text](url) to HTML <a> tags."""
     pattern = r"\[([^\]]+)\]\(([^\)]+)\)"
     return re.sub(pattern, r'<a href="\2" target="_blank">\1</a>', text)
+
+
+def _visible_length(text: str) -> int:
+    """Char count after collapsing markdown links to their display text only."""
+    return len(re.sub(r"\[([^\]]+)\]\([^\)]+\)", r"\1", text))
 
 
 def normalize_country_to_code(country_value: str) -> str:
@@ -101,16 +154,58 @@ def validate_authority(authority: dict[str, Any], filename: str) -> None:
             raise TypeError(f"'additional_resources' should be a list in file: {filename}")
     if not isinstance(authority["year_established"], int):
         raise TypeError(f"'year_established' should be an integer in file: {filename}")
+    if authority.get("wikidata_id") is not None:
+        if not isinstance(authority["wikidata_id"], str):
+            raise TypeError(f"'wikidata_id' should be a string in file: {filename}")
+    if authority.get("coordinates") is not None:
+        coords = authority["coordinates"]
+        if not isinstance(coords, dict):
+            raise TypeError(f"'coordinates' should be a dict in file: {filename}")
+        for key in ("lat", "lon"):
+            if key not in coords:
+                raise ValueError(f"'coordinates' missing '{key}' in file: {filename}")
+            if not isinstance(coords[key], (int, float)):
+                raise TypeError(f"'coordinates.{key}' should be a number in file: {filename}")
+    if authority.get("wikipedia_multilang") is not None:
+        if not isinstance(authority["wikipedia_multilang"], dict):
+            raise TypeError(f"'wikipedia_multilang' should be a dict in file: {filename}")
+    if authority.get("shortname") is not None:
+        if not isinstance(authority["shortname"], str):
+            raise TypeError(f"'shortname' should be a string in file: {filename}")
     optional_fields = [
         "factoid",
         "head_title",
         "predecessor_organizations",
         "image",
         "additional_resources",
+        "wikidata_id",
+        "coordinates",
+        "wikipedia_multilang",
+        "shortname",
     ]
     missing_optional = [f for f in optional_fields if not authority.get(f)]
     if missing_optional:
         print(f"  Optional fields not provided: {', '.join(missing_optional)}")
+    invalid_tags = [t for t in authority.get("tags", []) if t not in _VALID_TAGS]
+    if invalid_tags:
+        print(
+            f"  WARNING: unrecognised tags (not in controlled vocabulary): "
+            f"{', '.join(invalid_tags)}"
+        )
+    _REMIT_WARN = 400
+    _FACTOID_WARN = 250
+    remit_visible = _visible_length(authority.get("remit", ""))
+    if remit_visible > _REMIT_WARN:
+        print(
+            f"  WARNING: 'remit' renders to ~{remit_visible} chars — "
+            f"consider shortening to under {_REMIT_WARN} for card readability"
+        )
+    factoid_visible = _visible_length(authority.get("factoid", ""))
+    if factoid_visible > _FACTOID_WARN:
+        print(
+            f"  WARNING: 'factoid' renders to ~{factoid_visible} chars — "
+            f"consider shortening to under {_FACTOID_WARN} for card readability"
+        )
     print(f"Validated: {authority['name']}")
 
 
@@ -153,12 +248,10 @@ def generate_site(
                 authority["headquarters_country"]
             )
 
-            safe_name = "".join(
-                c
-                for c in authority["name"].replace(" ", "_").replace("/", "-").lower()
-                if c.isalnum() or c in ("_", "-")
+            article_filename = f"{os.path.splitext(filename)[0]}.html"
+            authority["display_name"] = (
+                authority.get("shortname") or authority.get("acronym") or authority["name"]
             )
-            article_filename = f"{safe_name}.html"
 
             article_output = article_template.render(authority=authority)
             with open(os.path.join(output_dir, article_filename), "w", encoding="utf-8") as outf:
@@ -168,6 +261,8 @@ def generate_site(
             articles.append(
                 {
                     "name": authority["name"],
+                    "shortname": authority.get("shortname", ""),
+                    "display_name": authority["display_name"],
                     "acronym": authority.get("acronym", ""),
                     "remit": authority.get("remit", ""),
                     "factoid": authority.get("factoid", ""),
@@ -180,6 +275,12 @@ def generate_site(
                     "website": authority.get("website", ""),
                     "wikipedia": authority.get("wikipedia", ""),
                     "filename": article_filename,
+                    "tags": authority.get("tags", []),
+                    "coordinates": authority.get("coordinates"),
+                    "wikidata_id": authority.get("wikidata_id", ""),
+                    "headquarters_city": authority.get("headquarters_city", ""),
+                    "headquarters_country_name": authority.get("headquarters_country_name", ""),
+                    "headquarters_address": authority.get("headquarters_address", ""),
                 }
             )
             metadata_list.append(

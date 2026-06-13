@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ authority.name }} - AuthorityAtlas</title>
+    <title>{{ authority.display_name }} - AuthorityAtlas</title>
+    {% if authority.coordinates is defined and authority.coordinates %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    {% endif %}
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -21,6 +25,12 @@
         h1 {
             margin: 0 0 10px 0;
             color: #2c3e50;
+        }
+        .full-name {
+            color: #555;
+            font-size: 1em;
+            font-style: italic;
+            margin: 2px 0 0;
         }
         .acronym {
             color: #7f8c8d;
@@ -97,6 +107,23 @@
         .btn-secondary:hover {
             background-color: #7f8c8d;
         }
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+        .multilang-links {
+            margin-top: 12px;
+        }
+        .multilang-links p {
+            margin: 0 0 6px 0;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .multilang-links .links {
+            margin-top: 0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
         .resources {
             list-style: none;
             padding: 0;
@@ -157,7 +184,12 @@
         {% if authority.image is defined and authority.image %}
         <img src="{{ authority.image }}" alt="{{ authority.name }} logo" class="logo">
         {% endif %}
+        {% if authority.shortname is defined and authority.shortname %}
+        <h1>{{ authority.shortname }}</h1>
+        <p class="full-name">{{ authority.name }}</p>
+        {% else %}
         <h1>{{ authority.name }}</h1>
+        {% endif %}
         <p class="acronym">{{ authority.acronym }}</p>
     </header>
 
@@ -217,6 +249,22 @@
                 <div class="info-label">Address:</div>
                 <div class="info-value">{{ authority.headquarters_address }}</div>
             </div>
+            {% if authority.coordinates is defined and authority.coordinates %}
+            <div id="authority-map" style="height:280px;margin-top:1rem;border-radius:6px;"></div>
+            <script>
+              (function(){
+                var map = L.map('authority-map').setView([{{ authority.coordinates.lat }}, {{ authority.coordinates.lon }}], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                  maxZoom: 19
+                }).addTo(map);
+                L.marker([{{ authority.coordinates.lat }}, {{ authority.coordinates.lon }}])
+                  .addTo(map)
+                  .bindPopup('<strong>' + {{ authority.display_name | tojson }} + '</strong><br>' + {{ authority.headquarters_address | tojson }})
+                  .openPopup();
+              })();
+            </script>
+            {% endif %}
         </div>
 
         <!-- Legal Basis -->
@@ -232,7 +280,23 @@
             <div class="links">
                 <a href="{{ authority.website }}" target="_blank" class="btn">Official Website</a>
                 <a href="{{ authority.wikipedia }}" target="_blank" class="btn btn-secondary">Wikipedia</a>
+                {% if authority.wikidata_id is defined and authority.wikidata_id %}
+                <a href="https://www.wikidata.org/entity/{{ authority.wikidata_id }}"
+                   target="_blank" class="btn btn-secondary">Wikidata</a>
+                {% endif %}
             </div>
+            {% if authority.wikipedia_multilang is defined and authority.wikipedia_multilang | length > 1 %}
+            <div class="multilang-links">
+                <p>Wikipedia in other languages:</p>
+                <div class="links">
+                    {% for lang, url in authority.wikipedia_multilang.items() %}
+                    {% if lang != "en" %}
+                    <a href="{{ url }}" target="_blank" class="btn btn-secondary btn-small">{{ lang }}</a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
 
         <!-- Tags -->

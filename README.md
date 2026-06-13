@@ -18,20 +18,19 @@ Explore the live site at: https://authorityatlas.org
 
 We welcome contributions from the community!
 
-### 🏛️ Submitting a New Authority
+### 💡 Propose a New Authority
 
-To add a new authority to the Atlas:
+Know of a regulatory authority or public body that belongs in the Atlas?
+[Open a GitHub Issue](https://github.com/erngui/authorityatlas/issues/new/choose)
+using the **Propose a New Authority** template — no coding required.
+The authority must have an English Wikipedia page (please create one first if it
+does not exist).
 
-1. **Check if a Wikipedia page exists** - If not, please create one first (with proper sources). This ensures the authority is notable and well-documented.
+### 🛠️ Contribute Directly
 
-2. **Create a YAML file** under the `data/articles/` directory, using **Trinity House as your blueprint**. The Trinity House YAML (`data/articles/trinity_house.yaml`) serves as the reference template for all authorities and includes comprehensive documentation of all fields.
-
-3. **Some guidelines:**
-   - Keep `factoid` to 1-3 sentences focused on sense of wonder or origin story.
-   - Include full official address for mapping functionality
-   - Only add `additional_resources` if they provide unique perspectives beyond the official website and Wikipedia
-   
-4. **Commit your changes** and submit a **Pull Request** with a clear, descriptive message.
+Developers and data contributors who want to add or improve entries themselves:
+see [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow — including seeding
+from Wikidata, completing YAML fields, tagging rules, and the git process.
 
 ## 🚀 Getting Started with Development
 
@@ -113,7 +112,9 @@ Under these terms:
 
 ## 🙌 Acknowledgments
 
-- Wikipedia for providing the comprehensive knowledge base we link to
+- [Wikidata](https://www.wikidata.org) for structured authority data (coordinates, founding dates, official names, multilingual Wikipedia links) used to seed YAML entries via `aafetch.py`
+- [Wikipedia](https://www.wikipedia.org) for the comprehensive knowledge base we link to
+- [OpenStreetMap](https://www.openstreetmap.org) / [Nominatim](https://nominatim.org) for geocoding fallback when Wikidata has no coordinates
 - Grace's Guide and other specialized resources for domain-specific insights
 - The open-source community
 

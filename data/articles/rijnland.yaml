@@ -1,66 +1,50 @@
-# Authority Atlas - Minimal Metadata Version
-# Focus: Enable discovery, search, and navigation to authoritative sources
-# Philosophy: Index card, not encyclopedia entry
-#
-# CONVENTIONS:
-# - Markdown links supported in 'factoid' field
-# - Wikipedia page is required (create if necessary before indexing)
-# - Focus on clean, structured metadata for discovery rather than comprehensive content
-# - Tags can supplement structured fields with additional searchable information
-
 authorities:
-
-- name: "Hoogheemraadschap van Rijnland"
-  acronym: "HHR"
-
-  # Core identification
-  type: "Regional water authority (Waterschap)"
-  remit: "Rijnland Regional Water Authority. Manages water levels, flood protection, and water quality in the region between roughly Velsen and Gouda, ensuring clean water and protection from flooding."
-
-  # Discoverability
-  establishment_country: "Netherlands"
-  regional_remit: "Rijnland region"
-
-  # Location (for mapping and contact)
-  headquarters_address: "Archimedesweg 1, 2333 CM Leiden, Netherlands"
-  headquarters_city: "Leiden"
-  headquarters_country: "Netherlands"
-
-  # Dates (year only for simplicity)
-  year_established: 1248
-
-  # Organizational evolution
-  predecessor_organizations: "Informal cooperating water boards along the Oude Rijn (Old Rhine) river (pre-1248)"
-
-  # Links to authoritative sources
-  website: "https://www.rijnland.net/"
-  wikipedia: "https://en.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland"
-
-  # Factoid - Context and significance: Why this authority exists, its place in the regulatory ecosystem,
-  # and what makes it notable. Focus on: (1) category/similar authorities, (2) origin story/historical moment,
-  # (3) significance. Aim for 1-3 sentences that instill wonder about the regulatory landscape.
-  factoid: "The oldest water authority in the Netherlands. Mission statement: Dry feet and clean water."
-
-  # Legal basis (founding documents and current framework)
-  legal_basis_name: "Water Board Act (Waterschapswet, 1991) and original commission from Count William II of Holland and Zeeland, 1248"
-  legal_basis_link: "https://wetten.overheid.nl/BWBR0005108/"
-
-  # Leadership structure
-  head_title: "Dijkgraaf (literally Dike Count)"
-
-  # Tags for search/filtering
-  tags: ["Netherlands", "Water Management", "Flood Protection", "Regional Authority", "Water Quality", "Leiden", "South Holland", "Historic", "Medieval", "Water Board", "Waterschappen", "Dutch Water", "Rhine", "Democracy", "1248"]
-
-  # Additional resources beyond official website and Wikipedia
+- name: Hoogheemraadschap van Rijnland
+  acronym: HHR
+  type: water board in the Netherlands
+  remit: Rijnland Regional Water Authority. Manages water levels, flood protection,
+    and water quality in the region between roughly Velsen and Gouda, ensuring clean
+    water and protection from flooding.
+  establishment_country: Netherlands
+  regional_remit: Rijnland region
+  headquarters_address: Archimedesweg 1, 2333 CM Leiden, Netherlands
+  headquarters_city: Leiden
+  headquarters_country: Netherlands
+  year_established: 1255
+  predecessor_organizations: Informal cooperating water boards along the Oude Rijn
+    (Old Rhine) river (pre-1248)
+  wikidata_id: Q2619632
+  coordinates:
+    lat: 52.164647
+    lon: 4.4655
+  website: https://www.rijnland.net
+  wikipedia: https://en.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland
+  factoid: 'The oldest water authority in the Netherlands. Mission statement: Dry
+    feet and clean water.'
+  legal_basis_name: Water Board Act (Waterschapswet, 1991) and original commission
+    from Count William II of Holland and Zeeland, 1248
+  legal_basis_link: https://wetten.overheid.nl/BWBR0005108/
+  head_title: Dijkgraaf (literally Dike Count)
+  tags:
+  - freshwater
+  - regulation
+  - safety
+  - monitoring
   additional_resources:
-    - name: "About Rijnland (English)"
-      description: "Official English-language overview of Rijnland's mission, activities, and organizational structure in modern water management context."
-      link: "https://www.rijnland.net/about-rijnland-eng/"
-
-    - name: "Dutch Water Authorities: The Dutch Water Authority Model"
-      description: "Comprehensive PDF explaining the unique governance structure, legal framework, and democratic functioning of Dutch water boards including their historical development."
-      link: "https://dutchwaterauthorities.com/wp-content/uploads/2021/05/The-Dutch-water-authority-model.pdf"
-
-    - name: "Water Board (Netherlands) - Wikipedia"
-      description: "Detailed article on the Dutch water board system, explaining how these ancient democratic institutions function as independent governing bodies with taxing authority."
-      link: "https://en.wikipedia.org/wiki/Water_board_(Netherlands)"
+  - name: About Rijnland (English)
+    description: Official English-language overview of Rijnland's mission, activities,
+      and organizational structure in modern water management context.
+    link: https://www.rijnland.net/about-rijnland-eng/
+  - name: 'Dutch Water Authorities: The Dutch Water Authority Model'
+    description: Comprehensive PDF explaining the unique governance structure, legal
+      framework, and democratic functioning of Dutch water boards including their
+      historical development.
+    link: https://dutchwaterauthorities.com/wp-content/uploads/2021/05/The-Dutch-water-authority-model.pdf
+  - name: Water Board (Netherlands) - Wikipedia
+    description: Detailed article on the Dutch water board system, explaining how
+      these ancient democratic institutions function as independent governing bodies
+      with taxing authority.
+    link: https://en.wikipedia.org/wiki/Water_board_(Netherlands)
+  wikipedia_multilang:
+    en: https://en.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland
+    nl: https://nl.wikipedia.org/wiki/Hoogheemraadschap_van_Rijnland
