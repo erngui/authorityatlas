@@ -109,6 +109,40 @@ authority and follows the schema validated by `aagenerate.py`.
   will warn when these limits are exceeded. URLs inside markdown links do not count
   toward the visible length.
 
+### Tagging
+
+Assign **2–5 tags** drawn exclusively from the two lists below.
+`aagenerate.py` will warn on any tag not in the controlled vocabulary.
+
+**Domain tags** — what realm does this authority operate in?
+
+```
+marine, atmospheric, space, terrestrial, freshwater, biodiversity,
+food-agriculture, health, labour, finance, trade, energy, nuclear,
+transport, telecommunications, cultural-heritage, education,
+intellectual-property, justice, civil-society, industrial-development,
+digital, sport, media
+```
+
+**Function tags** — what does this authority do?
+
+```
+regulation, standard-setting, conservation, coordination, monitoring,
+safety, development-aid, rights-protection, research, scientific-advisory,
+arbitration-judicial
+```
+
+Rules:
+- Use **only** tags from the lists above. Do not invent new tags; request
+  additions via a GitHub Issue if nothing fits.
+- Choose the **minimum** tags needed. 2–3 is ideal; 5 is the maximum.
+- If genuinely no domain tag fits, use `other`.
+- Distinction: `research` = produces original science.
+  `scientific-advisory` = synthesises existing evidence, issues expert
+  opinions. A body may carry both.
+- Every authority should have at least one domain tag and at least one
+  function tag.
+
 ## Git workflow
 
 - Work on a **feature branch**, never commit directly to `main`.

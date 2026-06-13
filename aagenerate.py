@@ -27,6 +27,23 @@ _SPECIAL_COUNTRY_NAMES: dict[str, str] = {
     "EU": "European Union",
 }
 
+_DOMAIN_TAGS: frozenset[str] = frozenset({
+    "marine", "atmospheric", "space", "terrestrial", "freshwater", "biodiversity",
+    "food-agriculture", "health", "labour", "finance", "trade", "energy", "nuclear",
+    "transport", "telecommunications", "cultural-heritage", "education",
+    "intellectual-property", "justice", "civil-society", "industrial-development",
+    "digital", "sport", "media", "other",
+})
+
+_FUNCTION_TAGS: frozenset[str] = frozenset({
+    "regulation", "standard-setting", "conservation", "coordination", "monitoring",
+    "safety", "development-aid", "rights-protection", "research", "scientific-advisory",
+    "arbitration-judicial",
+})
+
+_VALID_TAGS: frozenset[str] = _DOMAIN_TAGS | _FUNCTION_TAGS
+
+
 
 def markdown_links_to_html(text: str) -> str:
     """Convert markdown links [text](url) to HTML <a> tags."""
@@ -138,6 +155,10 @@ def validate_authority(authority: dict[str, Any], filename: str) -> None:
     missing_optional = [f for f in optional_fields if not authority.get(f)]
     if missing_optional:
         print(f"  Optional fields not provided: {', '.join(missing_optional)}")
+    invalid_tags = [t for t in authority.get("tags", []) if t not in _VALID_TAGS]
+    if invalid_tags:
+        print(f"  WARNING: unrecognised tags (not in controlled vocabulary): "
+              f"{', '.join(invalid_tags)}")
     _REMIT_WARN = 400
     _FACTOID_WARN = 250
     remit_visible = _visible_length(authority.get("remit", ""))

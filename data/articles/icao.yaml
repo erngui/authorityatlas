@@ -25,8 +25,9 @@ authorities:
   legal_basis_link: https://www.icao.int/publications/doc-series/convention-international-civil-aviation-doc-7300
   head_title: President of the Council
   tags:
-  - air-transport
-  - safe-infrastructure
+  - transport
+  - safety
+  - standard-setting
   additional_resources:
   - name: ICAO SARPs Overview
     description: Official ICAO explanation of Standards and Recommended Practices

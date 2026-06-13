@@ -26,21 +26,10 @@ authorities:
   legal_basis_link: https://wetten.overheid.nl/BWBR0005108/
   head_title: Dijkgraaf (literally Dike Count)
   tags:
-  - Netherlands
-  - Water Management
-  - Flood Protection
-  - Regional Authority
-  - Water Quality
-  - Leiden
-  - South Holland
-  - Historic
-  - Medieval
-  - Water Board
-  - Waterschappen
-  - Dutch Water
-  - Rhine
-  - Democracy
-  - '1248'
+  - freshwater
+  - regulation
+  - safety
+  - monitoring
   additional_resources:
   - name: About Rijnland (English)
     description: Official English-language overview of Rijnland's mission, activities,

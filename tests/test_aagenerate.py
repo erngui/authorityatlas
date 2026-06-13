@@ -9,6 +9,9 @@ import pytest
 from jinja2 import Template
 
 from aagenerate import (
+    _DOMAIN_TAGS,
+    _FUNCTION_TAGS,
+    _VALID_TAGS,
     generate_site,
     get_country_name,
     markdown_links_to_html,
@@ -158,7 +161,7 @@ def _valid() -> dict[str, Any]:
         "website": "http://example.com",
         "wikipedia": "http://en.wikipedia.org/wiki/Test",
         "year_established": 2000,
-        "tags": ["test"],
+        "tags": ["regulation"],
     }
 
 
@@ -285,6 +288,29 @@ def test_validate_raises_when_wikipedia_multilang_not_dict() -> None:
     authority["wikipedia_multilang"] = "http://fr.wikipedia.org/wiki/Test"
     with pytest.raises(TypeError, match="'wikipedia_multilang' should be a dict"):
         validate_authority(authority, "test.yaml")
+
+
+def test_valid_tags_vocabularies_are_disjoint() -> None:
+    assert _DOMAIN_TAGS.isdisjoint(_FUNCTION_TAGS)
+
+
+def test_valid_tags_is_union_of_domain_and_function() -> None:
+    assert _VALID_TAGS == _DOMAIN_TAGS | _FUNCTION_TAGS
+
+
+def test_validate_accepts_valid_tags(capsys: pytest.CaptureFixture[str]) -> None:
+    authority = {**_valid(), "tags": ["marine", "regulation", "safety"]}
+    validate_authority(authority, "test.yaml")
+    assert "unrecognised tags" not in capsys.readouterr().out
+
+
+def test_validate_warns_on_invalid_tags(capsys: pytest.CaptureFixture[str]) -> None:
+    authority = {**_valid(), "tags": ["marine", "not-a-real-tag", "also-wrong"]}
+    validate_authority(authority, "test.yaml")
+    out = capsys.readouterr().out
+    assert "unrecognised tags" in out
+    assert "not-a-real-tag" in out
+    assert "also-wrong" in out
 
 
 def test_validate_prints_missing_optional_fields(capsys: pytest.CaptureFixture[str]) -> None:
