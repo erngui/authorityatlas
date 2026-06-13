@@ -30,20 +30,9 @@ authorities:
   legal_basis_link: https://www.legislation.gov.uk/ukpga/1995/21/contents
   head_title: Master
   tags:
-  - United Kingdom
-  - England
-  - Wales
-  - Channel Islands
-  - Gibraltar
-  - Lighthouses
-  - Navigation Aids
-  - Maritime Safety
-  - Royal Charter
-  - Charity
-  - Public Service
-  - Coastal Navigation
-  - Henry VIII
-  - Historic
+  - marine
+  - regulation
+  - safety
   additional_resources:
   - name: Grace's Guide to British Industrial History
     description: Comprehensive historical account of Trinity House's founding, development
