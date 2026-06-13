@@ -139,9 +139,7 @@ def test_fetch_entity_uses_p276_location_coordinates(mock_sparql: MagicMock) -> 
 
 
 def test_fetch_entity_uses_wkt_coordinate_fallback(mock_sparql: MagicMock) -> None:
-    bindings = [
-        {k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("lat", "lon")}
-    ]
+    bindings = [{k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("lat", "lon")}]
     bindings[0]["coords"] = {"value": "Point(-75.6972 45.4215)"}
     mock_sparql.return_value = _mock_response(bindings)
     result = aafetch.fetch_entity("170918")
@@ -168,8 +166,7 @@ def test_fetch_entity_parses_suggested_tags_from_p101_p452(mock_sparql: MagicMoc
 
 def test_fetch_entity_suggested_tags_empty_when_absent(mock_sparql: MagicMock) -> None:
     bindings = [
-        {k: v for k, v in _FULL_BINDINGS[0].items()
-         if k not in ("fieldOfWork", "industry")}
+        {k: v for k, v in _FULL_BINDINGS[0].items() if k not in ("fieldOfWork", "industry")}
     ]
     mock_sparql.return_value = _mock_response(bindings)
     result = aafetch.fetch_entity("170918")
@@ -178,8 +175,11 @@ def test_fetch_entity_suggested_tags_empty_when_absent(mock_sparql: MagicMock) -
 
 def test_fetch_entity_handles_missing_p457(mock_sparql: MagicMock) -> None:
     bindings = [
-        {k: v for k, v in _FULL_BINDINGS[0].items()
-         if k not in ("legalBasisName", "legalBasisLink")}
+        {
+            k: v
+            for k, v in _FULL_BINDINGS[0].items()
+            if k not in ("legalBasisName", "legalBasisLink")
+        }
     ]
     mock_sparql.return_value = _mock_response(bindings)
     result = aafetch.fetch_entity("170918")
@@ -312,6 +312,7 @@ def test_geocode_nominatim_returns_none_on_empty_results() -> None:
 
 def test_geocode_nominatim_returns_none_on_network_error() -> None:
     import urllib.error
+
     with patch("urllib.request.urlopen", side_effect=urllib.error.URLError("timeout")):
         result = aafetch.geocode_nominatim("Somewhere")
     assert result is None

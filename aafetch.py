@@ -9,6 +9,7 @@ Usage:
     python aafetch.py --qid Q225070 --dry-run
     python aafetch.py --qid Q170918 --output data/articles/icao.yaml --force-wikidata
 """
+
 from __future__ import annotations
 
 import argparse
@@ -196,8 +197,7 @@ def _normalize_qid(raw: str) -> str:
     digits = raw.lstrip("Qq")
     if not digits.isdigit():
         raise ValueError(
-            f"Invalid Wikidata Q-ID: '{raw}'. "
-            "Expected a positive integer (e.g. 170918 or Q170918)."
+            f"Invalid Wikidata Q-ID: '{raw}'. Expected a positive integer (e.g. 170918 or Q170918)."
         )
     return digits
 
@@ -205,8 +205,8 @@ def _normalize_qid(raw: str) -> str:
 def _build_sparql_query(qid: str) -> str:
     selects = " ".join(f"?{lang}wiki" for lang in _WIKI_LANGS)
     optionals = "\n  ".join(
-        f'OPTIONAL {{ ?{lang}wikiPage schema:about ?entity ; '
-        f'schema:isPartOf <https://{lang}.wikipedia.org/> . '
+        f"OPTIONAL {{ ?{lang}wikiPage schema:about ?entity ; "
+        f"schema:isPartOf <https://{lang}.wikipedia.org/> . "
         f"BIND(STR(?{lang}wikiPage) AS ?{lang}wiki) }}"
         for lang in _WIKI_LANGS
     )
@@ -338,7 +338,8 @@ def fetch_entity(qid: str) -> dict[str, Any]:
         "legal_basis_link": row.get("legalBasisLink", {}).get("value", ""),
         "_coordinate_source": coord_source,
         "_suggested_tags": [
-            v for v in (
+            v
+            for v in (
                 row.get("fieldOfWork", {}).get("value", ""),
                 row.get("industry", {}).get("value", ""),
             )
@@ -435,10 +436,7 @@ def seed_yaml(
 
     if merged.get("coordinates"):
         coords = merged["coordinates"]
-        print(
-            f"  Coordinates [{coord_source}]: "
-            f"lat={coords['lat']}, lon={coords['lon']}"
-        )
+        print(f"  Coordinates [{coord_source}]: lat={coords['lat']}, lon={coords['lon']}")
         if coord_source == "P276→P625":
             print(
                 "  WARNING: coordinates are from a linked location item (P276), "
@@ -541,7 +539,8 @@ def main() -> None:  # pragma: no cover
             entity = fetch_entity(qid)
             raw = entity.get("acronym") or entity.get("name") or f"Q{qid}"
             slug = "".join(
-                c for c in raw.replace(" ", "_").replace("/", "-").lower()
+                c
+                for c in raw.replace(" ", "_").replace("/", "-").lower()
                 if c.isalnum() or c in ("_", "-")
             )
             output = f"data/articles/{slug}.yaml"

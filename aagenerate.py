@@ -27,22 +27,53 @@ _SPECIAL_COUNTRY_NAMES: dict[str, str] = {
     "EU": "European Union",
 }
 
-_DOMAIN_TAGS: frozenset[str] = frozenset({
-    "marine", "atmospheric", "space", "terrestrial", "freshwater", "biodiversity",
-    "food-agriculture", "health", "labour", "finance", "trade", "energy", "nuclear",
-    "transport", "telecommunications", "cultural-heritage", "education",
-    "intellectual-property", "justice", "civil-society", "industrial-development",
-    "digital", "sport", "media", "other",
-})
+_DOMAIN_TAGS: frozenset[str] = frozenset(
+    {
+        "marine",
+        "atmospheric",
+        "space",
+        "terrestrial",
+        "freshwater",
+        "biodiversity",
+        "food-agriculture",
+        "health",
+        "labour",
+        "finance",
+        "trade",
+        "energy",
+        "nuclear",
+        "transport",
+        "telecommunications",
+        "cultural-heritage",
+        "education",
+        "intellectual-property",
+        "justice",
+        "civil-society",
+        "industrial-development",
+        "digital",
+        "sport",
+        "media",
+        "other",
+    }
+)
 
-_FUNCTION_TAGS: frozenset[str] = frozenset({
-    "regulation", "standard-setting", "conservation", "coordination", "monitoring",
-    "safety", "development-aid", "rights-protection", "research", "scientific-advisory",
-    "arbitration-judicial",
-})
+_FUNCTION_TAGS: frozenset[str] = frozenset(
+    {
+        "regulation",
+        "standard-setting",
+        "conservation",
+        "coordination",
+        "monitoring",
+        "safety",
+        "development-aid",
+        "rights-protection",
+        "research",
+        "scientific-advisory",
+        "arbitration-judicial",
+    }
+)
 
 _VALID_TAGS: frozenset[str] = _DOMAIN_TAGS | _FUNCTION_TAGS
-
 
 
 def markdown_links_to_html(text: str) -> str:
@@ -157,18 +188,24 @@ def validate_authority(authority: dict[str, Any], filename: str) -> None:
         print(f"  Optional fields not provided: {', '.join(missing_optional)}")
     invalid_tags = [t for t in authority.get("tags", []) if t not in _VALID_TAGS]
     if invalid_tags:
-        print(f"  WARNING: unrecognised tags (not in controlled vocabulary): "
-              f"{', '.join(invalid_tags)}")
+        print(
+            f"  WARNING: unrecognised tags (not in controlled vocabulary): "
+            f"{', '.join(invalid_tags)}"
+        )
     _REMIT_WARN = 400
     _FACTOID_WARN = 250
     remit_visible = _visible_length(authority.get("remit", ""))
     if remit_visible > _REMIT_WARN:
-        print(f"  WARNING: 'remit' renders to ~{remit_visible} chars — "
-              f"consider shortening to under {_REMIT_WARN} for card readability")
+        print(
+            f"  WARNING: 'remit' renders to ~{remit_visible} chars — "
+            f"consider shortening to under {_REMIT_WARN} for card readability"
+        )
     factoid_visible = _visible_length(authority.get("factoid", ""))
     if factoid_visible > _FACTOID_WARN:
-        print(f"  WARNING: 'factoid' renders to ~{factoid_visible} chars — "
-              f"consider shortening to under {_FACTOID_WARN} for card readability")
+        print(
+            f"  WARNING: 'factoid' renders to ~{factoid_visible} chars — "
+            f"consider shortening to under {_FACTOID_WARN} for card readability"
+        )
     print(f"Validated: {authority['name']}")
 
 
@@ -213,9 +250,7 @@ def generate_site(
 
             article_filename = f"{os.path.splitext(filename)[0]}.html"
             authority["display_name"] = (
-                authority.get("shortname")
-                or authority.get("acronym")
-                or authority["name"]
+                authority.get("shortname") or authority.get("acronym") or authority["name"]
             )
 
             article_output = article_template.render(authority=authority)
@@ -244,9 +279,7 @@ def generate_site(
                     "coordinates": authority.get("coordinates"),
                     "wikidata_id": authority.get("wikidata_id", ""),
                     "headquarters_city": authority.get("headquarters_city", ""),
-                    "headquarters_country_name": authority.get(
-                        "headquarters_country_name", ""
-                    ),
+                    "headquarters_country_name": authority.get("headquarters_country_name", ""),
                     "headquarters_address": authority.get("headquarters_address", ""),
                 }
             )

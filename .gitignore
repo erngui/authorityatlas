@@ -24,3 +24,7 @@ __pycache__/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Test coverage output
+.coverage
+htmlcov/
