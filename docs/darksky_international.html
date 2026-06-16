@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkSky International - AuthorityAtlas</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        header {
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .full-name {
+            color: #555;
+            font-size: 1em;
+            font-style: italic;
+            margin: 2px 0 0;
+        }
+        .acronym {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 10px 20px;
+            margin-bottom: 20px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+        .info-value {
+            color: #2c3e50;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .tag {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .tag:hover {
+            background-color: #2980b9;
+            cursor: pointer;
+        }
+        .factoid-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+        .multilang-links {
+            margin-top: 12px;
+        }
+        .multilang-links p {
+            margin: 0 0 6px 0;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .multilang-links .links {
+            margin-top: 0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .resources {
+            list-style: none;
+            padding: 0;
+        }
+        .resources li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .resources li:last-child {
+            border-bottom: none;
+        }
+        .resource-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .resource-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .authority-context {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-style: italic;
+            margin: -10px 0 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .authority-context p {
+            margin: 0;
+        }
+        
+        .logo {
+            max-width: 200px;
+            max-height: 100px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to AuthorityAtlas</a>
+    
+    <header>
+        
+        <img src="http://commons.wikimedia.org/wiki/Special:FilePath/Fall%20Exploration%20at%20Staunton%20River%20%2852516646232%29.jpg" alt="DarkSky International logo" class="logo">
+        
+        
+        <h1>DarkSky International</h1>
+        
+        <p class="acronym"></p>
+    </header>
+
+    <div class="authority-context">
+        <p>Part of the global network of authorities working for the common good</p>
+    </div>
+
+    <main>
+        <!-- Remit Section -->
+        <div class="section">
+            <h2>Remit</h2>
+            <p>A nonprofit organization building awareness of the value of dark skies, and of the need for quality outdoor lighting.</p>
+        </div>
+
+        <!-- Factoid Section (optional but recommended) -->
+        
+        <div class="factoid-box">
+            In the United States and Europe, 99 percent of the public can’t experience a natural night.
+        </div>
+        
+
+        <!-- Core Information -->
+        <div class="section">
+            <h2>Core Information</h2>
+            <div class="info-grid">
+                <div class="info-label">Type:</div>
+                <div class="info-value">environmental organization</div>
+
+                <div class="info-label">Established:</div>
+                <div class="info-value">1988</div>
+
+                <div class="info-label">Country:</div>
+                <div class="info-value country-code" data-country-code="US">United States</div>
+
+                <div class="info-label">Regional Remit:</div>
+                <div class="info-value">Global</div>
+
+                
+
+                
+                <div class="info-label">Predecessor:</div>
+                <div class="info-value">International Dark-Sky Association (IDA, 1988–2022)</div>
+                
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="section">
+            <h2>Location</h2>
+            <div class="info-grid">
+                <div class="info-label">Headquarters:</div>
+                <div class="info-value country-code" data-country-code="US">Tucson, United States</div>
+
+                <div class="info-label">Address:</div>
+                <div class="info-value">5049 East Broadway Blvd</div>
+            </div>
+            
+            <div id="authority-map" style="height:280px;margin-top:1rem;border-radius:6px;"></div>
+            <script>
+              (function(){
+                var map = L.map('authority-map').setView([32.2217, -110.8847], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                  maxZoom: 19
+                }).addTo(map);
+                L.marker([32.2217, -110.8847])
+                  .addTo(map)
+                  .bindPopup('<strong>' + "DarkSky International" + '</strong><br>' + "5049 East Broadway Blvd")
+                  .openPopup();
+              })();
+            </script>
+            
+        </div>
+
+        <!-- Legal Basis -->
+        
+
+        <!-- Official Links -->
+        <div class="section">
+            <h2>Official Sources</h2>
+            <div class="links">
+                <a href="http://www.darksky.org/" target="_blank" class="btn">Official Website</a>
+                <a href="https://en.wikipedia.org/wiki/DarkSky_International" target="_blank" class="btn btn-secondary">Wikipedia</a>
+                
+                <a href="https://www.wikidata.org/entity/Q826992"
+                   target="_blank" class="btn btn-secondary">Wikidata</a>
+                
+            </div>
+            
+            <div class="multilang-links">
+                <p>Wikipedia in other languages:</p>
+                <div class="links">
+                    
+                    
+                    
+                    
+                    <a href="https://de.wikipedia.org/wiki/DarkSky_International" target="_blank" class="btn btn-secondary btn-small">de</a>
+                    
+                    
+                    
+                    <a href="https://fr.wikipedia.org/wiki/Association_internationale_Dark_Sky" target="_blank" class="btn btn-secondary btn-small">fr</a>
+                    
+                    
+                    
+                    <a href="https://it.wikipedia.org/wiki/International_Dark-Sky_Association" target="_blank" class="btn btn-secondary btn-small">it</a>
+                    
+                    
+                    
+                    <a href="https://es.wikipedia.org/wiki/DarkSky_International" target="_blank" class="btn btn-secondary btn-small">es</a>
+                    
+                    
+                    
+                    <a href="https://zh.wikipedia.org/wiki/%E5%9C%8B%E9%9A%9B%E6%9A%97%E5%A4%A9%E5%8D%94%E6%9C%83" target="_blank" class="btn btn-secondary btn-small">zh</a>
+                    
+                    
+                    
+                    <a href="https://ja.wikipedia.org/wiki/%E5%9B%BD%E9%9A%9B%E3%83%80%E3%83%BC%E3%82%AF%E3%82%B9%E3%82%AB%E3%82%A4%E5%8D%94%E4%BC%9A" target="_blank" class="btn btn-secondary btn-small">ja</a>
+                    
+                    
+                    
+                    <a href="https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%AC%D9%85%D8%B9%D9%8A%D8%A9_%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9_%D9%84%D9%84%D8%B3%D9%85%D8%A7%D8%A1_%D8%A7%D9%84%D9%85%D8%B8%D9%84%D9%85%D8%A9" target="_blank" class="btn btn-secondary btn-small">ar</a>
+                    
+                    
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Tags -->
+        <div class="section">
+            <h2>Categories</h2>
+            <div class="tags">
+                
+                <a href="index.html?search=atmospheric" class="tag">atmospheric</a>
+                
+                <a href="index.html?search=conservation" class="tag">conservation</a>
+                
+                <a href="index.html?search=scientific-advisory" class="tag">scientific-advisory</a>
+                
+            </div>
+        </div>
+
+        <!-- Additional Resources (optional) -->
+        
+    </main>
+
+     <footer>
+    <p>
+     Developed by <a href="https://ernestoexplains.com" target="_blank">ernestoexplains.com</a> | 
+      <a href="https://authorityatlas.org" target="_blank">authorityatlas.org</a> | 
+      <a href="https://github.com/erngui/authorityatlas" target="_blank">Contribute!</a>
+    </p>
+  </footer>
+
+    <script>
+        // Convert ISO country code to flag emoji
+        function getFlag(countryCode) {
+            if (countryCode === 'EU') return '🇪🇺';
+            if (!countryCode || countryCode.length !== 2) return '🌍';
+            
+            // Convert to regional indicator symbols (flag emoji)
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
+
+        // Add flags to country displays on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find country code elements and add flags
+            const countryElements = document.querySelectorAll('.country-code');
+            countryElements.forEach(function(element) {
+                const countryCode = element.getAttribute('data-country-code');
+                if (countryCode) {
+                    const flag = getFlag(countryCode);
+                    element.textContent = flag + ' ' + element.textContent;
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
