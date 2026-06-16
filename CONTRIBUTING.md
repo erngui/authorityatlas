@@ -15,8 +15,8 @@
 - **No broken windows.** Do not leave failing tests, type errors, or lint violations
   in the codebase. Fix them immediately or revert the change that introduced them.
 
-> **Planned:** `ARCHITECTURE.md` documenting design decisions and `BACKLOG.md` for
-> tracking work items. Until they exist, use GitHub Issues and PR descriptions.
+See `ARCHITECTURE.md` for design decisions and data-flow documentation, and `BACKLOG.md`
+for the development roadmap.
 
 ## Code style
 
@@ -54,18 +54,14 @@ issues early.
   ```bash
   bandit -r aafetch.py aagenerate.py
   ```
-  > **Planned:** Bandit is not yet in `requirements.txt` or pre-commit. Add it.
 - **Pip-Audit** — checks dependencies for known CVEs:
   ```bash
   pip-audit
   ```
-  > **Planned:** Pip-Audit is not yet in the workflow. Add it alongside Bandit.
 - **Pre-commit hooks** — run all of the above automatically on every commit:
   ```bash
   pre-commit install   # once, after cloning
   ```
-  > **Planned:** `.pre-commit-config.yaml` does not exist yet. It should run
-  > Ruff, Mypy, Bandit, and `python -m pytest` (fast subset) on every commit.
 
 All of the above must pass before opening a pull request. Do not use `--no-verify`
 to bypass hooks.
@@ -157,7 +153,7 @@ marine, atmospheric, space, terrestrial, freshwater, biodiversity,
 food-agriculture, health, labour, finance, trade, energy, nuclear,
 transport, telecommunications, cultural-heritage, education,
 intellectual-property, justice, civil-society, industrial-development,
-digital, sport, media
+digital, sport, media, other
 ```
 
 **Function tags** — what does this authority do?
