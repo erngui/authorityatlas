@@ -125,11 +125,8 @@ def validate_authority(authority: dict[str, Any], filename: str) -> None:
     """Raise ValueError/TypeError if any required field is missing, empty, or wrong type."""
     required_fields = [
         "name",
-        "acronym",
         "remit",
         "type",
-        "legal_basis_name",
-        "legal_basis_link",
         "establishment_country",
         "regional_remit",
         "headquarters_city",
