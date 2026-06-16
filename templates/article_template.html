@@ -268,11 +268,13 @@
         </div>
 
         <!-- Legal Basis -->
+        {% if authority.legal_basis_name %}
         <div class="section">
             <h2>Legal Basis</h2>
             <p>{{ authority.legal_basis_name }}</p>
-            <a href="{{ authority.legal_basis_link }}" target="_blank" class="btn btn-secondary">View Legal Documents</a>
+            {% if authority.legal_basis_link %}<a href="{{ authority.legal_basis_link }}" target="_blank" class="btn btn-secondary">View Legal Documents</a>{% endif %}
         </div>
+        {% endif %}
 
         <!-- Official Links -->
         <div class="section">

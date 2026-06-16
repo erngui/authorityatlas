@@ -1,0 +1,38 @@
+authorities:
+- name: DarkSky International
+  shortname: ''
+  acronym: ''
+  type: environmental organization
+  remit: 'A nonprofit organization building awareness of the value of dark skies, and of the need for quality outdoor lighting.'
+  establishment_country: US
+  regional_remit: 'Global'
+  headquarters_address: 5049 East Broadway Blvd #105, Tucson, AZ 85711, USA
+  headquarters_city: Tucson
+  headquarters_country: United States
+  year_established: 1988
+  predecessor_organizations: 'International Dark-Sky Association (IDA, 1988–2022)'
+  wikidata_id: Q826992
+  coordinates:
+    lat: 32.2217
+    lon: -110.8847
+  website: http://www.darksky.org/
+  wikipedia: https://en.wikipedia.org/wiki/DarkSky_International
+  wikipedia_multilang:
+    en: https://en.wikipedia.org/wiki/DarkSky_International
+    de: https://de.wikipedia.org/wiki/DarkSky_International
+    fr: https://fr.wikipedia.org/wiki/Association_internationale_Dark_Sky
+    it: https://it.wikipedia.org/wiki/International_Dark-Sky_Association
+    es: https://es.wikipedia.org/wiki/DarkSky_International
+    zh: https://zh.wikipedia.org/wiki/%E5%9C%8B%E9%9A%9B%E6%9A%97%E5%A4%A9%E5%8D%94%E6%9C%83
+    ja: https://ja.wikipedia.org/wiki/%E5%9B%BD%E9%9A%9B%E3%83%80%E3%83%BC%E3%82%AF%E3%82%B9%E3%82%AB%E3%82%A4%E5%8D%94%E4%BC%9A
+    ar: https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%AC%D9%85%D8%B9%D9%8A%D8%A9_%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9_%D9%84%D9%84%D8%B3%D9%85%D8%A7%D8%A1_%D8%A7%D9%84%D9%85%D8%B8%D9%84%D9%85%D8%A9
+  factoid: 'In the United States and Europe, 99 percent of the public can’t experience a natural night.'
+  legal_basis_name: ''
+  legal_basis_link: ''
+  head_title: ''
+  tags:
+  - atmospheric
+  - conservation
+  - scientific-advisory
+  additional_resources: []
+  image: http://commons.wikimedia.org/wiki/Special:FilePath/Fall%20Exploration%20at%20Staunton%20River%20%2852516646232%29.jpg
